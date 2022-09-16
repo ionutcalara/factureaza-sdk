@@ -18,12 +18,6 @@ use DateTimeImmutable;
 
 class Account
 {
-    public readonly string $id;
-
-    public readonly string $accountName;
-
-    public readonly string $companyName;
-
     public readonly string $address1;
 
     public readonly string $address2;
@@ -47,4 +41,12 @@ class Account
     public readonly DateTimeImmutable $createdAt;
 
     public readonly DateTimeImmutable $updatedAt;
+
+    public function __construct(
+        public readonly string $id,
+        public readonly string $accountName,
+        public readonly string $companyName,
+    )
+    {
+    }
 }

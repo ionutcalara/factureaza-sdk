@@ -17,7 +17,7 @@ To connect to the live system, use the `connect` method and pass your api key:
 ```php
 $live = Factureaza::connect('api key here');
 $live->myAccount();
-// => Koneke\Factureaza\Models\Account
+// => Konekt\Factureaza\Models\Account
 //     id: "340138083",
 //     accountName: "yourcompany",
 //     companyName: "Your Company SRL",
@@ -31,7 +31,7 @@ To connect to the sandbox system, use the `sandbox` method:
 ```php
 $sandbox = Factureaza::sandbox();
 $sandbox->myAccount();
-// => Koneke\Factureaza\Models\Account
+// => Konekt\Factureaza\Models\Account
 //     id: "340138083",
 //     accountName: "sandbox",
 //     companyName: "Test Services SRL",
