@@ -1,0 +1,28 @@
+{
+    "name": "konekt/factureaza-sdk",
+    "description": "SDK for factureaza.ro API",
+    "type": "library",
+    "license": "MIT",
+    "keywords": ["billing", "invoicing", "factureaza", "factureaza.ro"],
+    "support": {
+        "source": "https://github.com/artkonekt/factureaza-sdk",
+        "issues": "https://github.com/artkonekt/factureaza-sdk/issues"
+    },
+    "require": {
+        "php": "^8.0",
+        "konekt/enum": "^3.0|^4.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Konekt\\Factureaza\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Konekt\\Factureaza\\Tests\\": "tests/"
+        }
+    }
+}
