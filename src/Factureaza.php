@@ -28,6 +28,7 @@ final class Factureaza
     private string $endpoint = 'https://factureaza.ro/graphql';
 
     private DateTimeZone $timezone;
+
     private HttpClient $http;
 
     public function __construct(

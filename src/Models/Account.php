@@ -46,7 +46,6 @@ class Account
         public readonly string $id,
         public readonly string $accountName,
         public readonly string $companyName,
-    )
-    {
+    ) {
     }
 }
