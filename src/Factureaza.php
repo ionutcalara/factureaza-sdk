@@ -14,9 +14,14 @@ declare(strict_types=1);
 
 namespace Konekt\Factureaza;
 
+use Carbon\Carbon;
+use Carbon\CarbonImmutable;
 use DateTimeZone;
 use Illuminate\Http\Client\Factory as HttpClient;
 use Illuminate\Http\Client\Response;
+use Illuminate\Support\Arr;
+use Konekt\Factureaza\Contracts\Resource;
+use ReflectionNamedType;
 
 final class Factureaza
 {
@@ -73,5 +78,41 @@ final class Factureaza
                     'query' => "{ $resource { " . implode(' ', $fields) . ' } }',
                 ],
             );
+    }
+
+    private function remap(array $attributes, string $forClass): array
+    {
+        if (!in_array(Resource::class, class_implements($forClass))) {
+            throw new \LogicException("The $forClass class must implement the " . Resource::class . ' interface');
+        }
+
+        $map = $forClass::attributeMap();
+        $result = [];
+
+        foreach ($attributes as $key => $value) {
+            $actualKey = array_key_exists($key, $map) ? $map[$key] : $key;
+            if (is_array($actualKey)) {
+                $actualValue = call_user_func($actualKey[1], $value);
+                $actualKey = $actualKey[0];
+            } else {
+                $actualValue = $this->isADateTimeProperty($actualKey, $forClass) ? CarbonImmutable::parse($value) : $value;
+            }
+
+            $result[$actualKey] = $actualValue;
+        }
+
+        return $result;
+    }
+
+    private function isADateTimeProperty(string $property, string $class): bool
+    {
+        $dateTypes = [\DateTime::class, \DateTimeImmutable::class, Carbon::class, CarbonImmutable::class];
+        $details = new \ReflectionProperty($class, $property);
+
+        if ($details->getType() instanceof ReflectionNamedType) {
+            return in_array($details->getType()->getName(), $dateTypes);
+        }
+
+        return !empty(Arr::where($details->getType()->getTypes(), fn($type) => in_array($type, $dateTypes)));
     }
 }

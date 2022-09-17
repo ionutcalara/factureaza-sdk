@@ -14,18 +14,38 @@ declare(strict_types=1);
 
 namespace Konekt\Factureaza\Endpoints;
 
+use Konekt\Factureaza\Models\MyAccount;
+
 trait Account
 {
-    public function myAccount(): \Konekt\Factureaza\Models\Account
+    private static array $accountQueryFields = [
+        'id',
+        'name',
+        'companyName',
+        'companyAddress1',
+        'companyAddress2',
+        'companyZip',
+        'companyCity',
+        'companyState',
+        'companyCountry { iso }',
+        'companyRegistrationId',
+        'companyEuid',
+        'companyUid',
+        'companyTaxId',
+        'domesticCurrency',
+        'createdAt',
+        'updatedAt',
+    ];
+
+    public function myAccount(): MyAccount
     {
-        $response = $this->query('account', ['id', 'name', 'companyName']);
+        $response = $this->query('account', self::$accountQueryFields);
 
-        $account = $response->json('data')['account'][0] ?? [];
-
-        return new \Konekt\Factureaza\Models\Account(
-            $account['id'],
-            $account['name'],
-            $account['companyName'],
+        return new MyAccount(
+            $this->remap(
+                $response->json('data')['account'][0] ?? [],
+                MyAccount::class,
+            )
         );
     }
 }
