@@ -20,6 +20,5 @@ trait Invoices
 {
     public function createInvoice(): Invoice
     {
-
     }
 }

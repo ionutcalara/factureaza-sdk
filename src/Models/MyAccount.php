@@ -61,7 +61,7 @@ class MyAccount implements Resource
             'companyAddress1' => 'address1',
             'companyAddress2' => 'address2',
             'companyCity' => 'city',
-            'companyCountry' => ['country', fn(array $country) => $country['iso']],
+            'companyCountry' => ['country', fn (array $country) => $country['iso']],
             'companyRegistrationId' => 'regNo',
             'companyUid' => 'taxNo',
             'companyTaxId' => 'taxNoPrefix',

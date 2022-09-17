@@ -113,6 +113,6 @@ final class Factureaza
             return in_array($details->getType()->getName(), $dateTypes);
         }
 
-        return !empty(Arr::where($details->getType()->getTypes(), fn($type) => in_array($type, $dateTypes)));
+        return !empty(Arr::where($details->getType()->getTypes(), fn ($type) => in_array($type, $dateTypes)));
     }
 }

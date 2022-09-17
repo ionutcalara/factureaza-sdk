@@ -22,7 +22,6 @@ class Invoice implements Resource
 
     public readonly string $id;
 
-
     public static function attributeMap(): array
     {
         return [];
