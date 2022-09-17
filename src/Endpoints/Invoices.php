@@ -15,10 +15,11 @@ declare(strict_types=1);
 namespace Konekt\Factureaza\Endpoints;
 
 use Konekt\Factureaza\Models\Invoice;
+use Konekt\Factureaza\Requests\CreateInvoice;
 
 trait Invoices
 {
-    public function createInvoice(): Invoice
+    public function createInvoice(CreateInvoice $invoice): Invoice
     {
     }
 }

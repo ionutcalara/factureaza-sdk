@@ -49,7 +49,7 @@ If you want dates to be returned in UTC, call the `useUTCTime()` method:
 
 ```php
 $factureaza = Factureaza::connect('api key');
-$factureaza->myAccount()->createdAt()->toIso8601String()
+$factureaza->myAccount()->createdAt()->toIso8601String();
 // 2014-06-06T16:23:34+03:00
 
 $factureaza->useUtcTime();

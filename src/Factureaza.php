@@ -26,6 +26,7 @@ use ReflectionNamedType;
 final class Factureaza
 {
     use Endpoints\Account;
+    use Endpoints\Invoices;
 
     private const SANDBOX_URL = 'https://sandbox.factureaza.ro/graphql';
     private const SANDBOX_KEY = '72543f4dc00474bc40a27916d172eb93339fae894ec7a6f2dceb4751d965';
@@ -76,6 +77,18 @@ final class Factureaza
                 $this->endpoint,
                 [
                     'query' => "{ $resource { " . implode(' ', $fields) . ' } }',
+                ],
+            );
+    }
+
+    protected function mutation(string $resource, array $fields): Response
+    {
+        return $this->http->withBasicAuth($this->apiKey, '')
+            ->asJson()
+            ->post(
+                $this->endpoint,
+                [
+                    'mutation' => "{ $resource { " . implode(' ', $fields) . ' } }',
                 ],
             );
     }
