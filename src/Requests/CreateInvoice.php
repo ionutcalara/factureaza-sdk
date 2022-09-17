@@ -59,5 +59,4 @@ class CreateInvoice
     {
         return $this;
     }
-
 }
