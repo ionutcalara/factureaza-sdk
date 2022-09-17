@@ -55,4 +55,23 @@ class FactureazaClientTest extends TestCase
         $api->useUTCTime();
         $this->assertEquals('UTC', $api->timezone()->getName());
     }
+
+    /** @test */
+    public function remote_dates_are_converted_when_using_utc()
+    {
+        $api = Factureaza::sandbox();
+
+        $srcDate = $api->myAccount()->createdAt;
+        $bucharestTimeZone = new \DateTimeZone('Europe/Bucharest');
+        $this->assertEquals('2014-06-06 16:23:34', $srcDate->format('Y-m-d H:i:s'));
+        $this->assertEquals(
+            $bucharestTimeZone->getOffset($srcDate),
+            $srcDate->getTimezone()->getOffset($srcDate)
+        );
+
+        $api->useUTCTime();
+        $utcDate = $api->myAccount()->createdAt;
+        $this->assertEquals('2014-06-06 13:23:34', $utcDate->format('Y-m-d H:i:s'));
+        $this->assertEquals(0, $utcDate->getTimezone()->getOffset($utcDate));
+    }
 }

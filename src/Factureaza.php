@@ -95,7 +95,7 @@ final class Factureaza
                 $actualValue = call_user_func($actualKey[1], $value);
                 $actualKey = $actualKey[0];
             } else {
-                $actualValue = $this->isADateTimeProperty($actualKey, $forClass) ? CarbonImmutable::parse($value) : $value;
+                $actualValue = $this->isADateTimeProperty($actualKey, $forClass) ? $this->makeDateTime($value) : $value;
             }
 
             $result[$actualKey] = $actualValue;
@@ -114,5 +114,10 @@ final class Factureaza
         }
 
         return !empty(Arr::where($details->getType()->getTypes(), fn ($type) => in_array($type, $dateTypes)));
+    }
+
+    private function makeDateTime(string $value): CarbonImmutable
+    {
+        return CarbonImmutable::parse($value)->setTimezone($this->timezone);
     }
 }

@@ -14,7 +14,7 @@ declare(strict_types=1);
 
 namespace Konekt\Factureaza\Models;
 
-use DateTimeImmutable;
+use Carbon\CarbonImmutable;
 use Konekt\Factureaza\Contracts\Resource;
 
 class MyAccount implements Resource
@@ -51,9 +51,9 @@ class MyAccount implements Resource
 
     public readonly string $domesticCurrency;
 
-    public readonly DateTimeImmutable $createdAt;
+    public readonly CarbonImmutable $createdAt;
 
-    public readonly DateTimeImmutable $updatedAt;
+    public readonly CarbonImmutable $updatedAt;
 
     public static function attributeMap(): array
     {
