@@ -39,7 +39,7 @@ trait Account
 
     public function myAccount(): MyAccount
     {
-        $response = $this->query('account', self::$accountQueryFields);
+        $response = $this->request('query', 'account', self::$accountQueryFields);
 
         return new MyAccount(
             $this->remap(

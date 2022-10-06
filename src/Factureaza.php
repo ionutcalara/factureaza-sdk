@@ -20,7 +20,10 @@ use DateTimeZone;
 use Illuminate\Http\Client\Factory as HttpClient;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Arr;
+use Konekt\Factureaza\Contracts\Mutation;
+use Konekt\Factureaza\Contracts\Query;
 use Konekt\Factureaza\Contracts\Resource;
+use Konekt\Factureaza\Exceptions\FactureazaException;
 use ReflectionNamedType;
 
 final class Factureaza
@@ -69,9 +72,9 @@ final class Factureaza
         return $this->timezone;
     }
 
-    protected function query(string $resource, array $fields): Response
+    protected function request(string $operation, string $resource, array $fields): Response
     {
-        return $this->http->withBasicAuth($this->apiKey, '')
+        $response = $this->http->withBasicAuth($this->apiKey, '')
             ->asJson()
             ->post(
                 $this->endpoint,
@@ -79,18 +82,32 @@ final class Factureaza
                     'query' => "{ $resource { " . implode(' ', $fields) . ' } }',
                 ],
             );
+        $this->checkForErrors($response);
+
+        return $response;
     }
 
-    protected function mutation(string $resource, array $fields): Response
+    protected function query(Query $query): Response
     {
-        return $this->http->withBasicAuth($this->apiKey, '')
+        return $this->request('query', $query->resource(), $query->fields());
+    }
+
+    protected function mutate(Mutation $mutation): Response
+    {
+        $response = $this->http->withBasicAuth($this->apiKey, '')
             ->asJson()
             ->post(
                 $this->endpoint,
                 [
-                    'mutation' => "{ $resource { " . implode(' ', $fields) . ' } }',
+                    "query" => "mutation { {$mutation->operation()} (\n"
+                        . $this->toGraphQLPayload($mutation->payload())
+                        . ") {\n   " . implode("\n   ", $mutation->fields())
+                        . "\n  }\n}",
                 ],
             );
+        $this->checkForErrors($response);
+
+        return $response;
     }
 
     private function remap(array $attributes, string $forClass): array
@@ -119,6 +136,10 @@ final class Factureaza
 
     private function isADateTimeProperty(string $property, string $class): bool
     {
+        if (!property_exists($class, $property)) {
+            return false;
+        }
+
         $dateTypes = [\DateTime::class, \DateTimeImmutable::class, Carbon::class, CarbonImmutable::class];
         $details = new \ReflectionProperty($class, $property);
 
@@ -132,5 +153,32 @@ final class Factureaza
     private function makeDateTime(string $value): CarbonImmutable
     {
         return CarbonImmutable::parse($value)->setTimezone($this->timezone);
+    }
+
+    private function checkForErrors(Response $response): void
+    {
+        if (null === $errors = $response->json('errors')) {
+            return;
+        }
+
+        throw new FactureazaException($errors[0]['message']);
+    }
+
+    private function toGraphQLPayload(array $payload): string
+    {
+        $result = '';
+        foreach ($payload as $key => $value) {
+            if (is_array($value)) {
+                if (Arr::isList($value)) {
+                    $result .= "  $key: [\n" . $this->toGraphQLPayload($value) . "]\n";
+                } else {
+                    $result .= "  {\n" . $this->toGraphQLPayload($value) . "}\n";
+                }
+            } else {
+                $result .= sprintf("  $key: %s\n", json_encode($value));
+            }
+        }
+
+        return $result;
     }
 }

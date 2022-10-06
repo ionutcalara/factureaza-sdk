@@ -14,14 +14,13 @@ declare(strict_types=1);
 
 namespace Konekt\Factureaza\Models;
 
-use Carbon\CarbonImmutable;
 use Konekt\Factureaza\Contracts\Resource;
 
 class MyAccount implements Resource
 {
     use HasDynamicAttributeConstructor;
-
-    public readonly string $id;
+    use HasId;
+    use HasTimestamps;
 
     public readonly string $name;
 
@@ -50,10 +49,6 @@ class MyAccount implements Resource
     public readonly string $euid;
 
     public readonly string $domesticCurrency;
-
-    public readonly CarbonImmutable $createdAt;
-
-    public readonly CarbonImmutable $updatedAt;
 
     public static function attributeMap(): array
     {

@@ -16,9 +16,23 @@ namespace Konekt\Factureaza\Requests;
 
 use Carbon\CarbonImmutable;
 use DateTimeInterface;
+use Konekt\Factureaza\Contracts\Mutation;
+use Konekt\Factureaza\Models\Client;
 
-class CreateInvoice
+class CreateInvoice implements Mutation
 {
+    private static array $queryFields = [
+        'id',
+        'documentDate',
+        'clientId',
+        'clientUid',
+        'clientName',
+        'currency',
+        'documentPositions { id price unit unitCount position description productCode total vat }',
+        'createdAt',
+        'updatedAt',
+    ];
+
     public string $currency = 'RON';
 
     public string $clientId;
@@ -29,6 +43,8 @@ class CreateInvoice
 
     /** @var CreateInvoiceItem[] */
     public array $items = [];
+
+    private Client|array|null $client = null;
 
     public function __construct()
     {
@@ -43,8 +59,36 @@ class CreateInvoice
         return $instance;
     }
 
-    public function forClient(): self
+    public function operation(): string
     {
+        return 'createInvoice';
+    }
+
+    public function payload(): array
+    {
+        return [
+            'currency' => $this->currency,
+            'clientId' => $this->clientId,
+            'documentSeriesId' => $this->documentSeriesId,
+            'documentDate' => $this->documentDate->format('Y-m-d'),
+            'documentPositions' => collect($this->items)->map->toPayload()->toArray(),
+        ];
+    }
+
+    public function fields(): array
+    {
+        return self::$queryFields;
+    }
+
+    public function forClient(string|array|Client $client): self
+    {
+        if (is_string($client)) {
+            $this->clientId = $client;
+            $this->client = null;
+        } else {
+            $this->client = $client;
+        }
+
         return $this;
     }
 
@@ -55,8 +99,19 @@ class CreateInvoice
         return $this;
     }
 
-    public function addItem(string $item): self
+    /**
+     * @param CreateInvoiceItem|array{description: string, unit: string, quantity: float, price: float, productCode: string, vat: string} $item
+     *
+     * @return $this
+     */
+    public function addItem(array|CreateInvoiceItem $item): self
     {
+        if (is_array($item)) {
+            $item = CreateInvoiceItem::fromArray($item);
+        }
+
+        $this->items[] = $item;
+
         return $this;
     }
 }

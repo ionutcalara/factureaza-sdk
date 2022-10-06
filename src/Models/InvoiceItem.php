@@ -3,35 +3,39 @@
 declare(strict_types=1);
 
 /**
- * Contains the Invoice class.
+ * Contains the InvoiceItem class.
  *
  * @copyright   Copyright (c) 2022 Attila Fulop
  * @author      Attila Fulop
  * @license     MIT
- * @since       2022-09-17
+ * @since       2022-10-06
  *
  */
 
 namespace Konekt\Factureaza\Models;
 
-use Carbon\CarbonImmutable;
 use Konekt\Factureaza\Contracts\Resource;
 
-class Invoice implements Resource
+class InvoiceItem implements Resource
 {
     use HasDynamicAttributeConstructor;
     use HasId;
     use HasTimestamps;
 
-    public readonly CarbonImmutable $documentDate;
+    public readonly string $description;
 
-    public readonly string $clientId;
+    public readonly float $price;
 
-    /** @var InvoiceItem[] */
-    public readonly array $items;
+    public readonly string $unit;
+
+    public readonly float $quantity;
+
+    public readonly string $productCode;
 
     public static function attributeMap(): array
     {
-        return [];
+        return [
+            'unitCount' => 'quantity',
+        ];
     }
 }

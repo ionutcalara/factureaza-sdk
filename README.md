@@ -12,6 +12,8 @@ This package provides a PHP SDK for interacting with the [factureaza.ro GraphQL 
 
 ## Usage
 
+### Live or Sandbox
+
 To connect to the live system, use the `connect` method and pass your api key:
 
 ```php
@@ -49,10 +51,44 @@ If you want dates to be returned in UTC, call the `useUTCTime()` method:
 
 ```php
 $factureaza = Factureaza::connect('api key');
-$factureaza->myAccount()->createdAt()->toIso8601String();
+$factureaza->myAccount()->createdAt->toIso8601String();
 // 2014-06-06T16:23:34+03:00
 
 $factureaza->useUtcTime();
-$factureaza->myAccount()->createdAt()->toIsoString();
+$factureaza->myAccount()->createdAt->toIsoString();
 // 2014-06-06T13:23:34+00:00
+```
+
+### Create an Invoice
+
+```php
+$request = CreateInvoice::inSeries('1061104148')
+    ->forClient('1064116434')
+    ->withEmissionDate('2021-09-17')
+    ->addItem(['description' => 'Service', 'price' => 19, 'unit' => 'luna', 'productCode' => '']);
+
+$invoice = Factureaza::sandbox()->createInvoice($request);
+//=> Konekt\Factureaza\Models\Invoice {#2760
+//     +documentDate: Carbon\CarbonImmutable @1631826000 {#2773
+//       date: 2021-09-17 00:00:00.0 Europe/Bucharest (+03:00),
+//     },
+//     +clientId: "1064116434",
+//     +items: [
+//       Konekt\Factureaza\Models\InvoiceItem {#2765
+//         +description: "Service",
+//         +price: 19.0,
+//         +unit: "luna",
+//         +quantity: 1.0,
+//         +productCode: "",
+//         +id: "1056077322",
+//       },
+//     ],
+//     +id: "1065254080",
+//     +createdAt: Carbon\CarbonImmutable @1665076996 {#2772
+//       date: 2022-10-06 20:23:16.0 Europe/Bucharest (+03:00),
+//     },
+//     +updatedAt: Carbon\CarbonImmutable @1665076996 {#2771
+//       date: 2022-10-06 20:23:16.0 Europe/Bucharest (+03:00),
+//     },
+//   }
 ```

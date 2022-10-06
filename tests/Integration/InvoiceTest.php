@@ -15,6 +15,8 @@ declare(strict_types=1);
 namespace Konekt\Factureaza\Tests\Integration;
 
 use Konekt\Factureaza\Factureaza;
+use Konekt\Factureaza\Models\Invoice;
+use Konekt\Factureaza\Models\InvoiceItem;
 use Konekt\Factureaza\Requests\CreateInvoice;
 use PHPUnit\Framework\TestCase;
 
@@ -25,14 +27,25 @@ class InvoiceTest extends TestCase
     {
         $api = Factureaza::sandbox();
 
-        $request = CreateInvoice::inSeries('')
-            ->forClient('Storm Storez SRL', 'RO35409777', 'Str. Soimului nr. 21', 'Sfantu Gheorghe', 'CV')
-            ->withEmissionDate('2022-09-17')
-            ->addItem('')
-            ->addItem('');
+        $request = CreateInvoice::inSeries('1061104148')
+            ->forClient('1064116434')
+            ->withEmissionDate('2021-09-17')
+            ->addItem(['description' => 'Service', 'price' => 19, 'unit' => 'luna', 'productCode' => '']);
 
         $invoice = $api->createInvoice($request);
 
-        $this->assertEquals('Hey, I am in progress', 'Hey, I am in progress');
+        $this->assertInstanceOf(Invoice::class, $invoice);
+        $this->assertEquals('2021-09-17', $invoice->documentDate->format('Y-m-d'));
+        $this->assertEquals('1064116434', $invoice->clientId);
+
+        $this->assertCount(1, $invoice->items);
+
+        $item = $invoice->items[0];
+        $this->assertInstanceOf(InvoiceItem::class, $item);
+        $this->assertEquals('Service', $item->description);
+        $this->assertEquals(19, $item->price);
+        $this->assertEquals('luna', $item->unit);
+        $this->assertEquals('', $item->productCode);
+        $this->assertEquals(1, $item->quantity);
     }
 }
