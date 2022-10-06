@@ -137,8 +137,9 @@ class SuperTinyArrayValidator
         if (is_bool($value)) {
             return $value ? 'true' : 'false';
         } elseif (is_object($value)) {
-            if ($value instanceof Stringable)
+            if ($value instanceof Stringable) {
                 return 'object ' . get_class($value);
+            }
         }
 
         return (string) ($value ?? 'NULL');

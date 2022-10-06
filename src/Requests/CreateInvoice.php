@@ -21,6 +21,17 @@ use Konekt\Factureaza\Models\Client;
 
 class CreateInvoice implements Mutation
 {
+    public string $currency = 'RON';
+
+    public string $clientId;
+
+    public string $documentSeriesId;
+
+    public CarbonImmutable $documentDate;
+
+    /** @var CreateInvoiceItem[] */
+    public array $items = [];
+
     private static array $queryFields = [
         'id',
         'documentDate',
@@ -32,17 +43,6 @@ class CreateInvoice implements Mutation
         'createdAt',
         'updatedAt',
     ];
-
-    public string $currency = 'RON';
-
-    public string $clientId;
-
-    public string $documentSeriesId;
-
-    public CarbonImmutable $documentDate;
-
-    /** @var CreateInvoiceItem[] */
-    public array $items = [];
 
     private Client|array|null $client = null;
 
