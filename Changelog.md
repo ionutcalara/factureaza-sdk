@@ -7,3 +7,4 @@
 - Sandbox or productions accounts can be used
 - My Account can be queried
 - Invoices can be created
+- Clients can be retrieved by id and tax no

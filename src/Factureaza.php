@@ -24,12 +24,14 @@ use Konekt\Factureaza\Contracts\Mutation;
 use Konekt\Factureaza\Contracts\Query;
 use Konekt\Factureaza\Contracts\Resource;
 use Konekt\Factureaza\Exceptions\FactureazaException;
+use Konekt\Factureaza\Models\GraphQLOperation;
 use ReflectionNamedType;
 
 final class Factureaza
 {
     use Endpoints\Account;
     use Endpoints\Invoices;
+    use Endpoints\Clients;
 
     private const SANDBOX_URL = 'https://sandbox.factureaza.ro/graphql';
     private const SANDBOX_KEY = '72543f4dc00474bc40a27916d172eb93339fae894ec7a6f2dceb4751d965';
@@ -72,16 +74,21 @@ final class Factureaza
         return $this->timezone;
     }
 
-    protected function request(string $operation, string $resource, array $fields): Response
+    protected function request(GraphQLOperation $operation, string $name, array $fields, ?array $arguments = null): Response
     {
+        $query = $operation->isMutation() ? 'mutation { ' : '{ ';
+        $query .= "$name ";
+
+        if (!empty($arguments)) {
+            $query .= "(\n" . $this->toGraphQLArguments($arguments) . ") ";
+        }
+
+        $query .= "{\n   " . implode("\n   ", $fields) . "\n  }\n}";
+
         $response = $this->http->withBasicAuth($this->apiKey, '')
             ->asJson()
-            ->post(
-                $this->endpoint,
-                [
-                    'query' => "{ $resource { " . implode(' ', $fields) . ' } }',
-                ],
-            );
+            ->post($this->endpoint, ['query' => $query]);
+
         $this->checkForErrors($response);
 
         return $response;
@@ -89,25 +96,22 @@ final class Factureaza
 
     protected function query(Query $query): Response
     {
-        return $this->request('query', $query->resource(), $query->fields());
+        return $this->request(
+            GraphQLOperation::QUERY(),
+            $query->resource(),
+            $query->fields(),
+            $query->arguments(),
+        );
     }
 
     protected function mutate(Mutation $mutation): Response
     {
-        $response = $this->http->withBasicAuth($this->apiKey, '')
-            ->asJson()
-            ->post(
-                $this->endpoint,
-                [
-                    "query" => "mutation { {$mutation->operation()} (\n"
-                        . $this->toGraphQLPayload($mutation->payload())
-                        . ") {\n   " . implode("\n   ", $mutation->fields())
-                        . "\n  }\n}",
-                ],
-            );
-        $this->checkForErrors($response);
-
-        return $response;
+        return $this->request(
+            GraphQLOperation::MUTATION(),
+            $mutation->operation(),
+            $mutation->fields(),
+            $mutation->payload(),
+        );
     }
 
     private function remap(array $attributes, string $forClass): array
@@ -124,6 +128,8 @@ final class Factureaza
             if (is_array($actualKey)) {
                 $actualValue = call_user_func($actualKey[1], $value);
                 $actualKey = $actualKey[0];
+            } elseif ($this->isABoolProperty($actualKey, $forClass)) {
+                $actualValue = 'true' === strtolower($value);
             } else {
                 $actualValue = $this->isADateTimeProperty($actualKey, $forClass) ? $this->makeDateTime($value) : $value;
             }
@@ -150,6 +156,21 @@ final class Factureaza
         return !empty(Arr::where($details->getType()->getTypes(), fn ($type) => in_array($type, $dateTypes)));
     }
 
+    private function isABoolProperty(string $property, string $class): bool
+    {
+        if (!property_exists($class, $property)) {
+            return false;
+        }
+
+        $details = new \ReflectionProperty($class, $property);
+
+        if ($details->getType() instanceof ReflectionNamedType) {
+            return 'bool' === $details->getType()->getName();
+        }
+
+        return !empty(Arr::where($details->getType()->getTypes(), fn ($type) => 'bool' === $type));
+    }
+
     private function makeDateTime(string $value): CarbonImmutable
     {
         return CarbonImmutable::parse($value)->setTimezone($this->timezone);
@@ -164,15 +185,15 @@ final class Factureaza
         throw new FactureazaException($errors[0]['message']);
     }
 
-    private function toGraphQLPayload(array $payload): string
+    private function toGraphQLArguments(array $arguments): string
     {
         $result = '';
-        foreach ($payload as $key => $value) {
+        foreach ($arguments as $key => $value) {
             if (is_array($value)) {
                 if (Arr::isList($value)) {
-                    $result .= "  $key: [\n" . $this->toGraphQLPayload($value) . "]\n";
+                    $result .= "  $key: [\n" . $this->toGraphQLArguments($value) . "]\n";
                 } else {
-                    $result .= "  {\n" . $this->toGraphQLPayload($value) . "}\n";
+                    $result .= "  {\n" . $this->toGraphQLArguments($value) . "}\n";
                 }
             } else {
                 $result .= sprintf("  $key: %s\n", json_encode($value));

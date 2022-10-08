@@ -19,9 +19,41 @@ use Konekt\Factureaza\Contracts\Resource;
 class Client implements Resource
 {
     use HasDynamicAttributeConstructor;
+    use HasId;
+    use HasTimestamps;
+
+    public readonly string $name;
+
+    public readonly bool $isCompany;
+
+    public readonly string $address;
+
+    public readonly string $address2;
+
+    public readonly string $zip;
+
+    public readonly string $city;
+
+    public readonly string $province;
+
+    public readonly string $country;
+
+    public readonly string $email;
+
+    public readonly string $regNo;
+
+    public readonly string $taxNo;
+
+    public readonly string $taxNoPrefix;
 
     public static function attributeMap(): array
     {
-        return [];
+        return [
+            'country' => ['country', fn (array $country) => $country['iso']],
+            'registrationId' => 'regNo',
+            'uid' => 'taxNo',
+            'taxId' => 'taxNoPrefix',
+            'state' => 'province',
+        ];
     }
 }

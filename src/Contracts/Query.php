@@ -17,4 +17,6 @@ namespace Konekt\Factureaza\Contracts;
 interface Query extends GraphQLRequest
 {
     public function resource(): string;
+
+    public function arguments(): ?array;
 }

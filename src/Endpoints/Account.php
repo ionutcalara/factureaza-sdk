@@ -15,31 +15,15 @@ declare(strict_types=1);
 namespace Konekt\Factureaza\Endpoints;
 
 use Konekt\Factureaza\Models\MyAccount;
+use Konekt\Factureaza\Requests\GetMyAccount;
 
 trait Account
 {
-    private static array $accountQueryFields = [
-        'id',
-        'name',
-        'companyName',
-        'companyAddress1',
-        'companyAddress2',
-        'companyZip',
-        'companyCity',
-        'companyState',
-        'companyCountry { iso }',
-        'companyRegistrationId',
-        'companyEuid',
-        'companyUid',
-        'companyTaxId',
-        'domesticCurrency',
-        'createdAt',
-        'updatedAt',
-    ];
+
 
     public function myAccount(): MyAccount
     {
-        $response = $this->request('query', 'account', self::$accountQueryFields);
+        $response = $this->query(new GetMyAccount());
 
         return new MyAccount(
             $this->remap(
