@@ -19,8 +19,6 @@ use Konekt\Factureaza\Requests\GetMyAccount;
 
 trait Account
 {
-
-
     public function myAccount(): MyAccount
     {
         $response = $this->query(new GetMyAccount());

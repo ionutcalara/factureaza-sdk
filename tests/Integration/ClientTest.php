@@ -14,7 +14,6 @@ declare(strict_types=1);
 
 namespace Konekt\Factureaza\Tests\Integration;
 
-use Illuminate\Support\Collection;
 use Konekt\Factureaza\Factureaza;
 use Konekt\Factureaza\Models\Client;
 use PHPUnit\Framework\TestCase;
