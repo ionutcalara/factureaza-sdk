@@ -129,3 +129,36 @@ $client = Factureaza::sandbox()->client('1064116434');
 ```php
 $client = Factureaza::sandbox()->clientByTaxNo('13548146');
 ```
+
+### Create a Client
+
+```php
+$client = Factureaza::sandbox()->createClient([
+    'name' => 'Giovanni Gatto',
+    'isCompany' => false,
+    'city' => 'Pokyo',
+    'address' => 'Mishiaza Vue 72',
+]);
+//=> Konekt\Factureaza\Models\Client {#2701
+//     +name: "Giovanni Gatto",
+//     +isCompany: false,
+//     +address: "Mishiaza Vue 72",
+//     +address2: null,
+//     +zip: null,
+//     +city: "Pokyo",
+//     +province: null,
+//     +country: "RO",
+//     +email: null,
+//     +phone: null,
+//     +regNo: null,
+//     +taxNo: "",
+//     +taxNoPrefix: null,
+//     +id: "1064116440",
+//     +createdAt: Carbon\CarbonImmutable @1665343572 {#2692
+//       date: 2022-10-09 22:26:12.0 Europe/Bucharest (+03:00),
+//     },
+//     +updatedAt: Carbon\CarbonImmutable @1665343572 {#2722
+//       date: 2022-10-09 22:26:12.0 Europe/Bucharest (+03:00),
+//     },
+//   }
+```

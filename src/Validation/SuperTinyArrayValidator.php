@@ -80,6 +80,28 @@ class SuperTinyArrayValidator
         return $this->asString($value);
     }
 
+    private function asOptionalBool(mixed $value, bool $default = false): bool|null|ValidationResult
+    {
+        if (null === $value) {
+            return $default;
+        }
+
+        return $this->asBool($value);
+    }
+
+    private function asBool(mixed $value): bool|ValidationResult
+    {
+        if (is_bool($value)) {
+            return $value;
+        } elseif (0 === $value || 'false' === $value || 'FALSE' === $value) {
+            return false;
+        } elseif (1 === $value || 'true' === $value || 'TRUE' === $value) {
+            return true;
+        }
+
+        return ValidationResult::FAILED();
+    }
+
     private function asNumber(mixed $value): float|int|ValidationResult
     {
         if (is_int($value) || is_float($value)) {

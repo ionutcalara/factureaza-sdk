@@ -30,7 +30,6 @@ trait RequestsClientFields
         'zip',
         'state',
         'telephone',
-        'zip',
         'country { iso }',
         'createdAt',
         'updatedAt',

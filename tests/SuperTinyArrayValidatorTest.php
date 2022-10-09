@@ -137,6 +137,61 @@ class SuperTinyArrayValidatorTest extends TestCase
     }
 
     /** @test */
+    public function it_can_validate_an_optional_bool()
+    {
+        $validator = SuperTinyArrayValidator::createFor('client');
+        $schema = ['isCompany' => 'bool'];
+        $data = ['isCompany' => true];
+
+        $validated = $validator->validate($schema, $data);
+        $this->assertIsArray($validated);
+        $this->assertEquals($data, $validated);
+    }
+
+    /** @test */
+    public function it_can_validate_a_mandatory_bool()
+    {
+        $validator = SuperTinyArrayValidator::createFor('client');
+        $schema = ['isCompany' => 'bool*'];
+        $data = ['isCompany' => true];
+
+        $validated = $validator->validate($schema, $data);
+        $this->assertIsArray($validated);
+        $this->assertEquals($data, $validated);
+    }
+
+    /** @test */
+    public function it_allows_0_as_boolean_false()
+    {
+        $validator = SuperTinyArrayValidator::createFor('client');
+        $schema = ['isCompany' => 'bool*'];
+        $data = ['isCompany' => 0];
+
+        $this->assertFalse($validator->validate($schema, $data)['isCompany']);
+    }
+
+    /** @test */
+    public function it_allows_1_as_boolean_true()
+    {
+        $validator = SuperTinyArrayValidator::createFor('client');
+        $schema = ['isCompany' => 'bool*'];
+        $data = ['isCompany' => 1];
+
+        $this->assertTrue($validator->validate($schema, $data)['isCompany']);
+    }
+
+    /** @test */
+    public function it_throws_a_validation_exception_if_a_mandatory_bool_is_null()
+    {
+        $validator = SuperTinyArrayValidator::createFor('invoice');
+        $schema = ['isReverseVat' => 'bool*'];
+        $data = ['isReverseVat' => null];
+
+        $this->expectException(ValidationException::class);
+        $validator->validate($schema, $data);
+    }
+
+    /** @test */
     public function it_throws_a_validation_exception_if_a_mandatory_field_is_missing()
     {
         $validator = SuperTinyArrayValidator::createFor('invoice');

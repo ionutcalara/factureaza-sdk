@@ -28,23 +28,25 @@ class Client implements Resource
 
     public readonly string $address;
 
-    public readonly string $address2;
+    public readonly ?string $address2;
 
-    public readonly string $zip;
+    public readonly ?string $zip;
 
     public readonly string $city;
 
-    public readonly string $province;
+    public readonly ?string $province;
 
     public readonly string $country;
 
-    public readonly string $email;
+    public readonly ?string $email;
 
-    public readonly string $regNo;
+    public readonly ?string $phone;
 
-    public readonly string $taxNo;
+    public readonly ?string $regNo;
 
-    public readonly string $taxNoPrefix;
+    public readonly ?string $taxNo;
+
+    public readonly ?string $taxNoPrefix;
 
     public static function attributeMap(): array
     {
@@ -54,6 +56,7 @@ class Client implements Resource
             'uid' => 'taxNo',
             'taxId' => 'taxNoPrefix',
             'state' => 'province',
+            'telephone' => 'phone',
         ];
     }
 }

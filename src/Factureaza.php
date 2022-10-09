@@ -196,10 +196,19 @@ final class Factureaza
                     $result .= "  {\n" . $this->toGraphQLArguments($value) . "}\n";
                 }
             } else {
-                $result .= sprintf("  $key: %s\n", json_encode($value));
+                $result .= sprintf("  $key: %s\n", $this->escapeArgument($value));
             }
         }
 
         return $result;
+    }
+
+    private function escapeArgument(mixed $value): string
+    {
+        if (is_bool($value)) {
+            return $value ? '"true"' : '"false"';
+        }
+
+        return json_encode($value);
     }
 }

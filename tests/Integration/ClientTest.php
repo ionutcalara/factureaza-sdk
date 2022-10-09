@@ -33,6 +33,9 @@ class ClientTest extends TestCase
         $this->assertEquals('BLD. MIHAI VITEAZU Nr. 7,Ap. 18', $client->address);
         $this->assertEquals('', $client->address2);
         $this->assertEquals('550350', $client->zip);
+        $this->assertEquals('office@cubus.ro', $client->email);
+        $this->assertEquals('', $client->phone);
+
         $this->assertTrue($client->isCompany);
         $this->assertEquals('RO', $client->country);
         $this->assertEquals('J32 /508 /2000', $client->regNo);
@@ -54,5 +57,24 @@ class ClientTest extends TestCase
         $this->assertInstanceOf(Client::class, $client);
         $this->assertEquals('1064116434', $client->id);
         $this->assertEquals('13548146', $client->taxNo);
+    }
+
+    /** @test */
+    public function it_can_create_a_client_with_minimal_data()
+    {
+        $client = Factureaza::sandbox()->createClient([
+            'name' => 'Giovanni Gatto',
+            'isCompany' => false,
+            'city' => 'Pokyo',
+            'address' => 'Mishiaza Vue 72',
+        ]);
+
+        $this->assertInstanceOf(Client::class, $client);
+        $this->assertNotNull($client->id);
+        $this->assertEquals('Giovanni Gatto', $client->name);
+        $this->assertEquals('Pokyo', $client->city);
+        $this->assertEquals('Mishiaza Vue 72', $client->address);
+        $this->assertFalse($client->isCompany);
+        $this->assertEquals('RO', $client->country);
     }
 }
