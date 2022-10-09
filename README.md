@@ -92,3 +92,40 @@ $invoice = Factureaza::sandbox()->createInvoice($request);
 //     },
 //   }
 ```
+
+### Find Clients
+
+You can retrieve a client either by its Factureaza ID, or by tax number (cod fiscal).
+
+#### Find a Client by Factureaza ID
+
+```php
+$client = Factureaza::sandbox()->client('1064116434');
+//=> Konekt\Factureaza\Models\Client {#2691
+//     +name: "CUBUS ARTS S.R.L.",
+//     +isCompany: true,
+//     +address: "BLD. MIHAI VITEAZU Nr. 7,Ap. 18",
+//     +address2: "",
+//     +zip: "550350",
+//     +city: "SIBIU",
+//     +province: "Sibiu",
+//     +country: "RO",
+//     +email: "office@cubus.ro",
+//     +regNo: "J32 /508 /2000",
+//     +taxNo: "13548146",
+//     +taxNoPrefix: "RO",
+//     +id: "1064116434",
+//     +createdAt: Carbon\CarbonImmutable @1402061592 {#2708
+//       date: 2014-06-06 16:33:12.0 Europe/Bucharest (+03:00),
+//     },
+//     +updatedAt: Carbon\CarbonImmutable @1402061592 {#2696
+//       date: 2014-06-06 16:33:12.0 Europe/Bucharest (+03:00),
+//     },
+//   }
+```
+
+#### Find a Client by Tax Number
+
+```php
+$client = Factureaza::sandbox()->clientByTaxNo('13548146');
+```
