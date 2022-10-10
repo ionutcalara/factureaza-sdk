@@ -1,7 +1,7 @@
 # Factureaza PHP SDK Changelog
 
-## Unreleased
-##### 2022-XX-YY
+## 1.0.0
+##### 2022-10-10
 
 - Initial release
 - Sandbox or productions accounts can be used
