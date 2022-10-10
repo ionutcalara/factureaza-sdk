@@ -20,7 +20,7 @@ use Konekt\Factureaza\Requests\CreateInvoice;
 
 trait Invoices
 {
-    public function createInvoice(CreateInvoice $invoice): Invoice
+    public function createInvoice(CreateInvoice $invoice): ?Invoice
     {
         $response = $this->mutate($invoice);
 
@@ -29,11 +29,10 @@ trait Invoices
             $items[] = new InvoiceItem($this->remap($documentPosition, InvoiceItem::class));
         }
 
-        return new Invoice(
-            array_merge(
-                $this->remap($response->json('data')['createInvoice'] ?? [], Invoice::class),
-                ['items' => $items],
-            )
-        );
+        $data = $response->json('data')['createInvoice'] ?? null;
+
+
+
+        return is_null($data) ? null : new Invoice(array_merge($this->remap($data, Invoice::class), ['items' => $items]));
     }
 }

@@ -26,19 +26,17 @@ trait Clients
     public function client(string $id): ?Client
     {
         $response = $this->query(new GetClient($id));
+        $data = $response->json('data')['clients'][0] ?? null;
 
-        return new Client(
-            $this->remap($response->json('data')['clients'][0] ?? [], Client::class)
-        );
+        return is_null($data) ? null : new Client($this->remap($data, Client::class));
     }
 
     public function clientByTaxNo(string $taxNo): ?Client
     {
         $response = $this->query(new GetClientByTaxNo($taxNo));
+        $data = $response->json('data')['clients'][0] ?? null;
 
-        return new Client(
-            $this->remap($response->json('data')['clients'][0] ?? [], Client::class)
-        );
+        return is_null($data) ? null : new Client($this->remap($data, Client::class));
     }
 
     public function createClient(array|CreateClient $client): Client
