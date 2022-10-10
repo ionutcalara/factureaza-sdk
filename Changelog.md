@@ -1,7 +1,7 @@
 # Factureaza PHP SDK Changelog
 
-## Unreleased
-##### 2022-XX-YY
+## 1.0.1
+##### 2022-10-11
 
 - Fixed false positive hydration when the API returns no results
 
