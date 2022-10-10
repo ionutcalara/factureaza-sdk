@@ -14,6 +14,8 @@ declare(strict_types=1);
 
 namespace Konekt\Factureaza\Endpoints;
 
+use Konekt\Factureaza\Exceptions\ClientExistsException;
+use Konekt\Factureaza\Exceptions\FactureazaException;
 use Konekt\Factureaza\Models\Client;
 use Konekt\Factureaza\Requests\CreateClient;
 use Konekt\Factureaza\Requests\GetClient;
@@ -42,7 +44,13 @@ trait Clients
     public function createClient(array|CreateClient $client): Client
     {
         $request = is_array($client) ? CreateClient::fromArray($client) : $client;
-        $response = $this->mutate($request);
+        try {
+            $response = $this->mutate($request);
+        } catch (FactureazaException $e) {
+            if (1 === preg_match('/(CIF).*(exist).*(client)/i', $e->getMessage())) {
+                throw new ClientExistsException($e->getMessage());
+            }
+        }
 
         return new Client(
             $this->remap($response->json('data')['createClient'], Client::class)

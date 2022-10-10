@@ -3,19 +3,17 @@
 declare(strict_types=1);
 
 /**
- * Contains the FactureazaException class. It represents an error from the API
+ * Contains the ClientExistsException class.
  *
  * @copyright   Copyright (c) 2022 Attila Fulop
  * @author      Attila Fulop
  * @license     MIT
- * @since       2022-10-06
+ * @since       2022-10-10
  *
  */
 
 namespace Konekt\Factureaza\Exceptions;
 
-use RuntimeException;
-
-class FactureazaException extends RuntimeException
+class ClientExistsException extends FactureazaException
 {
 }

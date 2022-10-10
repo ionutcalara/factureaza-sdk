@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace Konekt\Factureaza\Tests\Integration;
 
+use Konekt\Factureaza\Exceptions\ClientExistsException;
 use Konekt\Factureaza\Factureaza;
 use Konekt\Factureaza\Models\Client;
 use PHPUnit\Framework\TestCase;
@@ -76,5 +77,19 @@ class ClientTest extends TestCase
         $this->assertEquals('Mishiaza Vue 72', $client->address);
         $this->assertFalse($client->isCompany);
         $this->assertEquals('RO', $client->country);
+    }
+
+    /** @test */
+    public function attempting_to_create_a_client_with_an_existing_tax_number_throws_duplicate_client_exception()
+    {
+        $this->expectException(ClientExistsException::class);
+
+        $client = Factureaza::sandbox()->createClient([
+            'name' => 'CUBUS ARTS S.R.L.',
+            'isCompany' => true,
+            'taxNo' => '13548146',
+            'city' => 'SIBIU',
+            'address' => 'BLD. MIHAI VITEAZU Nr. 7,Ap. 18',
+        ]);
     }
 }

@@ -162,3 +162,11 @@ $client = Factureaza::sandbox()->createClient([
 //     },
 //   }
 ```
+
+Factureaza identifies clients based on their `taxNo` (`uid` in Factureaza API) field,
+which represents either the tax number (CIF/CUI) of a company or the
+personal identification number (CNP) of a natural person.
+
+If you try to create a client with a `taxNo` that already exists, a `ClientExistsException`
+is thrown.
+
