@@ -31,8 +31,6 @@ trait Invoices
 
         $data = $response->json('data')['createInvoice'] ?? null;
 
-
-
         return is_null($data) ? null : new Invoice(array_merge($this->remap($data, Invoice::class), ['items' => $items]));
     }
 }
