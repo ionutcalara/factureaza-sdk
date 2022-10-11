@@ -1,5 +1,10 @@
 # Factureaza PHP SDK Changelog
 
+## Unreleased
+##### 2022-XX-YY
+
+- Fixed errors due to uninitialized Invoice annotations
+
 ## 1.1.0
 ##### 2022-10-11
 

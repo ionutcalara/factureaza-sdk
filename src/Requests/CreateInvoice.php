@@ -27,9 +27,9 @@ class CreateInvoice implements Mutation
 
     public string $documentSeriesId;
 
-    public string $upperAnnotation;
+    public ?string $upperAnnotation = null;
 
-    public string $lowerAnnotation;
+    public ?string $lowerAnnotation = null;
 
     public CarbonImmutable $documentDate;
 
