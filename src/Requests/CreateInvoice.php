@@ -27,6 +27,10 @@ class CreateInvoice implements Mutation
 
     public string $documentSeriesId;
 
+    public string $upperAnnotation;
+
+    public string $lowerAnnotation;
+
     public CarbonImmutable $documentDate;
 
     /** @var CreateInvoiceItem[] */
@@ -39,6 +43,8 @@ class CreateInvoice implements Mutation
         'clientUid',
         'clientName',
         'currency',
+        'lowerAnnotation',
+        'upperAnnotation',
         'documentPositions { id price unit unitCount position description productCode total vat }',
         'createdAt',
         'updatedAt',
@@ -71,6 +77,8 @@ class CreateInvoice implements Mutation
             'clientId' => $this->clientId,
             'documentSeriesId' => $this->documentSeriesId,
             'documentDate' => $this->documentDate->format('Y-m-d'),
+            'upperAnnotation' => $this->upperAnnotation,
+            'lowerAnnotation' => $this->lowerAnnotation,
             'documentPositions' => collect($this->items)->map->toPayload()->toArray(),
         ];
     }
@@ -82,6 +90,7 @@ class CreateInvoice implements Mutation
 
     public function forClient(string|array|Client $client): self
     {
+        // @todo this doesn't work well when non-string gets passed
         if (is_string($client)) {
             $this->clientId = $client;
             $this->client = null;
@@ -95,6 +104,20 @@ class CreateInvoice implements Mutation
     public function withEmissionDate(string|DateTimeInterface $date): self
     {
         $this->documentDate = is_string($date) ? CarbonImmutable::createFromFormat('Y-m-d', $date) : CarbonImmutable::createFromInterface($date);
+
+        return $this;
+    }
+
+    public function withLowerAnnotation(string $text): self
+    {
+        $this->lowerAnnotation = $text;
+
+        return $this;
+    }
+
+    public function withUpperAnnotation(string $text): self
+    {
+        $this->upperAnnotation = $text;
 
         return $this;
     }

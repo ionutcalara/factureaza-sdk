@@ -30,6 +30,8 @@ class InvoiceTest extends TestCase
         $request = CreateInvoice::inSeries('1061104148')
             ->forClient('1064116434')
             ->withEmissionDate('2021-09-17')
+            ->withUpperAnnotation('Hello I am on the top')
+            ->withLowerAnnotation('Hello I smell the bottom')
             ->addItem(['description' => 'Service', 'price' => 19, 'unit' => 'luna', 'productCode' => '']);
 
         $invoice = $api->createInvoice($request);
@@ -37,6 +39,8 @@ class InvoiceTest extends TestCase
         $this->assertInstanceOf(Invoice::class, $invoice);
         $this->assertEquals('2021-09-17', $invoice->documentDate->format('Y-m-d'));
         $this->assertEquals('1064116434', $invoice->clientId);
+        $this->assertEquals('Hello I am on the top', $invoice->upperAnnotation);
+        $this->assertEquals('Hello I smell the bottom', $invoice->lowerAnnotation);
 
         $this->assertCount(1, $invoice->items);
 

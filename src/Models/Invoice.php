@@ -27,6 +27,10 @@ class Invoice implements Resource
 
     public readonly string $clientId;
 
+    public readonly string $upperAnnotation;
+
+    public readonly string $lowerAnnotation;
+
     /** @var InvoiceItem[] */
     public readonly array $items;
 

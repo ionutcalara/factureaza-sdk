@@ -1,5 +1,10 @@
 # Factureaza PHP SDK Changelog
 
+## Unreleased
+##### 2022-XX-YY
+
+- Added lower and upper annotation support to Invoices
+
 ## 1.0.1
 ##### 2022-10-11
 
