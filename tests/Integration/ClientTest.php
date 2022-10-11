@@ -84,7 +84,7 @@ class ClientTest extends TestCase
     {
         $this->expectException(ClientExistsException::class);
 
-        $client = Factureaza::sandbox()->createClient([
+        Factureaza::sandbox()->createClient([
             'name' => 'CUBUS ARTS S.R.L.',
             'isCompany' => true,
             'taxNo' => '13548146',

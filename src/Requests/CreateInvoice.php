@@ -88,14 +88,14 @@ class CreateInvoice implements Mutation
         return self::$queryFields;
     }
 
-    public function forClient(string|array|Client $client): self
+    public function forClient(string|Client $client): self
     {
-        // @todo this doesn't work well when non-string gets passed
         if (is_string($client)) {
             $this->clientId = $client;
             $this->client = null;
         } else {
             $this->client = $client;
+            $this->clientId = $client->id;
         }
 
         return $this;
