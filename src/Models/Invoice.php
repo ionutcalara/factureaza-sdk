@@ -27,6 +27,14 @@ class Invoice implements Resource
 
     public readonly string $clientId;
 
+    public readonly string $number;
+
+    public readonly float $total;
+
+    public readonly string $currency;
+
+    public readonly string $hashcode;
+
     public readonly ?string $upperAnnotation;
 
     public readonly ?string $lowerAnnotation;
@@ -36,6 +44,8 @@ class Invoice implements Resource
 
     public static function attributeMap(): array
     {
-        return [];
+        return [
+            'series' => 'number',
+        ];
     }
 }

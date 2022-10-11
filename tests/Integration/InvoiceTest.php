@@ -39,6 +39,10 @@ class InvoiceTest extends TestCase
         $this->assertInstanceOf(Invoice::class, $invoice);
         $this->assertEquals('2021-09-17', $invoice->documentDate->format('Y-m-d'));
         $this->assertEquals('1064116434', $invoice->clientId);
+        $this->assertEquals('19', $invoice->total);
+        $this->assertEquals('RON', $invoice->currency);
+        $this->assertIsString($invoice->number);
+        $this->assertIsString($invoice->hashcode);
         $this->assertEquals('Hello I am on the top', $invoice->upperAnnotation);
         $this->assertEquals('Hello I smell the bottom', $invoice->lowerAnnotation);
 

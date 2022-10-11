@@ -1,5 +1,10 @@
 # Factureaza PHP SDK Changelog
 
+## Unreleased
+##### 2022-XX-YY
+
+- Added number, total, currency and hashcode fields to invoices
+
 ## 1.1.1
 ##### 2022-10-11
 
