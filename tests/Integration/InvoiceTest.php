@@ -57,7 +57,6 @@ class InvoiceTest extends TestCase
         $this->assertEquals(1, $item->quantity);
     }
 
-
     /** @test */
     public function it_can_retrieve_invoices_as_pdf_in_base64_format()
     {

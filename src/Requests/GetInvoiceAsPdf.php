@@ -18,14 +18,13 @@ use Konekt\Factureaza\Contracts\Query;
 
 class GetInvoiceAsPdf implements Query
 {
-    public function fields(): array
-    {
-        return ['id', 'pdfContent'];
-    }
-
     public function __construct(
         private readonly string $id,
     ) {
+    }
+    public function fields(): array
+    {
+        return ['id', 'pdfContent'];
     }
 
     public function resource(): string
