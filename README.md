@@ -106,6 +106,16 @@ $pdf = Factureaza::connect('your-api-key')->invoiceAsPdfBase64($invoiceId);
 file_put_contents('invoice.pdf', base64_decode($pdf));
 ```
 
+### Retrieve a Single Invoice
+
+Unique invoices can be retrieved by id:
+
+```php
+$invoiceId = '1065254039';
+$invoice = Factureaza::connect('your-api-key')->invoice($invoiceId);
+//=> Konekt\Factureaza\Models\Invoice {#2760
+```
+
 ### Find Clients
 
 You can retrieve a client either by its Factureaza ID, or by tax number (cod fiscal).

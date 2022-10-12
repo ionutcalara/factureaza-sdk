@@ -39,7 +39,7 @@ class InvoiceTest extends TestCase
         $this->assertInstanceOf(Invoice::class, $invoice);
         $this->assertEquals('2021-09-17', $invoice->documentDate->format('Y-m-d'));
         $this->assertEquals('1064116434', $invoice->clientId);
-        $this->assertEquals('19', $invoice->total);
+        $this->assertEquals(19, $invoice->total);
         $this->assertEquals('RON', $invoice->currency);
         $this->assertIsString($invoice->number);
         $this->assertIsString($invoice->hashcode);
@@ -63,5 +63,31 @@ class InvoiceTest extends TestCase
         $pdf = Factureaza::sandbox()->invoiceAsPdfBase64('1065254039');
         $this->assertIsString($pdf);
         $this->assertStringStartsWith('%PDF', base64_decode($pdf));
+    }
+
+    /** @test */
+    public function it_can_retrieve_an_invoice_by_id()
+    {
+        $invoice = Factureaza::sandbox()->invoice('1065254039');
+
+        $this->assertInstanceOf(Invoice::class, $invoice);
+        $this->assertEquals('2020-02-15', $invoice->documentDate->format('Y-m-d'));
+        $this->assertEquals('1064116436', $invoice->clientId);
+        $this->assertEquals(5706.05, $invoice->total);
+        $this->assertEquals('RON', $invoice->currency);
+        $this->assertEquals('openapi-6', $invoice->number);
+        $this->assertEquals('a6ea63aa-7d61-11ea-86a3-63919243', $invoice->hashcode);
+        $this->assertNull($invoice->upperAnnotation);
+        $this->assertEquals("Sperăm intr-o colaborare fructuoasă şi pe viitor.\n Cu stimă maximă și virtute absolută, Ion Pop S.C. DEMO IMPEX S.R.L.", $invoice->lowerAnnotation);
+
+        $this->assertCount(2, $invoice->items);
+
+        $item = $invoice->items[0];
+        $this->assertInstanceOf(InvoiceItem::class, $item);
+        $this->assertEquals('Prestări servicii programare cf. ctc. 3482/14.03.2020', $item->description);
+        $this->assertEquals(191, $item->price);
+        $this->assertEquals('ore', $item->unit);
+        $this->assertNull($item->productCode);
+        $this->assertEquals(21, $item->quantity);
     }
 }

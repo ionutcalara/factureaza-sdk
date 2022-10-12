@@ -18,9 +18,12 @@ use Carbon\CarbonImmutable;
 use DateTimeInterface;
 use Konekt\Factureaza\Contracts\Mutation;
 use Konekt\Factureaza\Models\Client;
+use Konekt\Factureaza\Requests\Concerns\RequestsInvoiceFields;
 
 class CreateInvoice implements Mutation
 {
+    use RequestsInvoiceFields;
+
     public string $currency = 'RON';
 
     public string $clientId;
@@ -35,23 +38,6 @@ class CreateInvoice implements Mutation
 
     /** @var CreateInvoiceItem[] */
     public array $items = [];
-
-    private static array $queryFields = [
-        'id',
-        'documentDate',
-        'clientId',
-        'clientUid',
-        'clientName',
-        'currency',
-        'total',
-        'hashcode',
-        'series',
-        'lowerAnnotation',
-        'upperAnnotation',
-        'documentPositions { id price unit unitCount position description productCode total vat }',
-        'createdAt',
-        'updatedAt',
-    ];
 
     private Client|array|null $client = null;
 
@@ -84,11 +70,6 @@ class CreateInvoice implements Mutation
             'lowerAnnotation' => $this->lowerAnnotation,
             'documentPositions' => collect($this->items)->map->toPayload()->toArray(),
         ];
-    }
-
-    public function fields(): array
-    {
-        return self::$queryFields;
     }
 
     public function forClient(string|Client $client): self

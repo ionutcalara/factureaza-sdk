@@ -30,7 +30,7 @@ class InvoiceItem implements Resource
 
     public readonly float $quantity;
 
-    public readonly string $productCode;
+    public readonly ?string $productCode;
 
     public static function attributeMap(): array
     {

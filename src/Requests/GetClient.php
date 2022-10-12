@@ -15,6 +15,7 @@ declare(strict_types=1);
 namespace Konekt\Factureaza\Requests;
 
 use Konekt\Factureaza\Contracts\Query;
+use Konekt\Factureaza\Requests\Concerns\RequestsClientFields;
 
 class GetClient implements Query
 {

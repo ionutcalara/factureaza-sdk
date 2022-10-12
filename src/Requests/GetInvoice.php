@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * Contains the GetInvoiceAsPdf class.
+ * Contains the GetInvoice class.
  *
  * @copyright   Copyright (c) 2022 Attila Fulop
  * @author      Attila Fulop
@@ -15,17 +15,15 @@ declare(strict_types=1);
 namespace Konekt\Factureaza\Requests;
 
 use Konekt\Factureaza\Contracts\Query;
+use Konekt\Factureaza\Requests\Concerns\RequestsInvoiceFields;
 
-class GetInvoiceAsPdf implements Query
+class GetInvoice implements Query
 {
+    use RequestsInvoiceFields;
+
     public function __construct(
         private readonly string $id,
     ) {
-    }
-
-    public function fields(): array
-    {
-        return ['id', 'pdfContent'];
     }
 
     public function resource(): string

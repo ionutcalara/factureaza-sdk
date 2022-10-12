@@ -12,7 +12,7 @@ declare(strict_types=1);
  *
  */
 
-namespace Konekt\Factureaza\Requests;
+namespace Konekt\Factureaza\Requests\Concerns;
 
 trait RequestsClientFields
 {

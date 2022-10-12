@@ -16,6 +16,7 @@ namespace Konekt\Factureaza\Requests;
 
 use Konekt\Factureaza\Contracts\Mutation;
 use Konekt\Factureaza\Exceptions\InvalidClientException;
+use Konekt\Factureaza\Requests\Concerns\RequestsClientFields;
 use Konekt\Factureaza\Validation\SuperTinyArrayValidator;
 
 class CreateClient implements Mutation

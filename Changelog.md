@@ -3,7 +3,8 @@
 ## Unreleased
 ##### 2022-XX-YY
 
-- Added retrieve invoice PDF support
+- Added retrieve invoice PDF method
+- Added retrieve single invoice by id method
 
 ## 1.2.0
 ##### 2022-10-11
