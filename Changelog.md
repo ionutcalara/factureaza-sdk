@@ -1,8 +1,8 @@
 # Factureaza PHP SDK Changelog
 
 
-## Unreleased
-##### 2022-XX-YY
+## 1.4.0
+##### 2022-10-12
 
 - Added state (`draft`, `open`*, `closed`, `cancelled`) to Invoices
 - Changed the default state of created invoices from draft to open
