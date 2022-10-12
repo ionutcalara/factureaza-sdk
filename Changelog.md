@@ -1,7 +1,7 @@
 # Factureaza PHP SDK Changelog
 
-## Unreleased
-##### 2022-XX-YY
+## 1.3.0
+##### 2022-10-12
 
 - Added retrieve invoice PDF method
 - Added retrieve single invoice by id method
