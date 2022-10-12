@@ -25,6 +25,8 @@ class Invoice implements Resource
 
     public readonly CarbonImmutable $documentDate;
 
+    public readonly DocumentState $state;
+
     public readonly string $clientId;
 
     public readonly string $number;
@@ -46,6 +48,7 @@ class Invoice implements Resource
     {
         return [
             'series' => 'number',
+            'documentState' => 'state',
         ];
     }
 }

@@ -18,6 +18,7 @@ use Carbon\CarbonImmutable;
 use DateTimeInterface;
 use Konekt\Factureaza\Contracts\Mutation;
 use Konekt\Factureaza\Models\Client;
+use Konekt\Factureaza\Models\DocumentState;
 use Konekt\Factureaza\Requests\Concerns\RequestsInvoiceFields;
 
 class CreateInvoice implements Mutation
@@ -41,9 +42,12 @@ class CreateInvoice implements Mutation
 
     private Client|array|null $client = null;
 
+    private DocumentState $state;
+
     public function __construct()
     {
         $this->documentDate = CarbonImmutable::now();
+        $this->state = DocumentState::create();
     }
 
     public static function inSeries(string $seriesId): self
@@ -66,6 +70,7 @@ class CreateInvoice implements Mutation
             'clientId' => $this->clientId,
             'documentSeriesId' => $this->documentSeriesId,
             'documentDate' => $this->documentDate->format('Y-m-d'),
+            'documentState' => $this->state->value(),
             'upperAnnotation' => $this->upperAnnotation,
             'lowerAnnotation' => $this->lowerAnnotation,
             'documentPositions' => collect($this->items)->map->toPayload()->toArray(),
@@ -102,6 +107,34 @@ class CreateInvoice implements Mutation
     public function withUpperAnnotation(string $text): self
     {
         $this->upperAnnotation = $text;
+
+        return $this;
+    }
+
+    public function asDraft(): self
+    {
+        $this->state = DocumentState::DRAFT();
+
+        return $this;
+    }
+
+    public function asClosed(): self
+    {
+        $this->state = DocumentState::CLOSED();
+
+        return $this;
+    }
+
+    public function asOpen(): self
+    {
+        $this->state = DocumentState::OPEN();
+
+        return $this;
+    }
+
+    public function asCancelled(): self
+    {
+        $this->state = DocumentState::CANCELLED();
 
         return $this;
     }

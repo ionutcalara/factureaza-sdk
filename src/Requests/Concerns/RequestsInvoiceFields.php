@@ -19,6 +19,7 @@ trait RequestsInvoiceFields
     private static array $queryFields = [
         'id',
         'documentDate',
+        'documentState',
         'clientId',
         'clientUid',
         'clientName',

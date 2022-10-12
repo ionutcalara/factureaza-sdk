@@ -20,6 +20,7 @@ use DateTimeZone;
 use Illuminate\Http\Client\Factory as HttpClient;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Arr;
+use Konekt\Enum\Enum;
 use Konekt\Factureaza\Contracts\Mutation;
 use Konekt\Factureaza\Contracts\Query;
 use Konekt\Factureaza\Contracts\Resource;
@@ -130,8 +131,12 @@ final class Factureaza
                 $actualKey = $actualKey[0];
             } elseif ($this->isABoolProperty($actualKey, $forClass)) {
                 $actualValue = 'true' === strtolower($value);
+            } elseif ($this->isADateTimeProperty($actualKey, $forClass)) {
+                $actualValue = $this->makeDateTime($value);
+            } elseif ($enumClass = $this->isAKonektEnum($actualKey, $forClass)) {
+                $actualValue = $enumClass::create($value);
             } else {
-                $actualValue = $this->isADateTimeProperty($actualKey, $forClass) ? $this->makeDateTime($value) : $value;
+                $actualValue = $value;
             }
 
             $result[$actualKey] = $actualValue;
@@ -154,6 +159,28 @@ final class Factureaza
         }
 
         return !empty(Arr::where($details->getType()->getTypes(), fn ($type) => in_array($type, $dateTypes)));
+    }
+
+    private function isAKonektEnum(string $property, string $class): false|string
+    {
+        if (!property_exists($class, $property)) {
+            return false;
+        }
+
+        $details = new \ReflectionProperty($class, $property);
+
+        if ($details->getType() instanceof ReflectionNamedType) {
+            $types = [$details->getType()->getName()];
+        } else {
+            $types = $details->getType()->getTypes();
+        }
+
+        $enumTypes = Arr::where(
+            $types,
+            fn ($type) => class_exists($type) && in_array(Enum::class, class_parents($type))
+        );
+
+        return empty($enumTypes) ? false : $enumTypes[0];
     }
 
     private function isABoolProperty(string $property, string $class): bool

@@ -90,4 +90,35 @@ class InvoiceTest extends TestCase
         $this->assertNull($item->productCode);
         $this->assertEquals(21, $item->quantity);
     }
+
+    /** @test */
+    public function a_newly_created_invoice_is_open_by_default()
+    {
+        $api = Factureaza::sandbox();
+
+        $request = CreateInvoice::inSeries('1061104148')
+            ->forClient('1064116434')
+            ->withEmissionDate('2021-09-17')
+            ->addItem(['description' => 'Service', 'price' => 19, 'unit' => 'luna', 'productCode' => '']);
+
+        $invoice = $api->createInvoice($request);
+
+        $this->assertTrue($invoice->state->isOpen(), 'The invoice is not in open state by default');
+    }
+
+    /** @test */
+    public function a_draft_invoice_can_be_explicitly_requested()
+    {
+        $api = Factureaza::sandbox();
+
+        $request = CreateInvoice::inSeries('1061104148')
+            ->forClient('1064116434')
+            ->withEmissionDate('2021-09-17')
+            ->asDraft()
+            ->addItem(['description' => 'Service', 'price' => 19, 'unit' => 'luna', 'productCode' => '']);
+
+        $invoice = $api->createInvoice($request);
+
+        $this->assertTrue($invoice->state->isDraft(), 'The invoice should be a draft when explicitly requested');
+    }
 }

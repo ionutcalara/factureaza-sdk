@@ -93,6 +93,33 @@ $invoice = Factureaza::sandbox()->createInvoice($request);
 //   }
 ```
 
+### Document States
+
+Invoices and other documents can have 4 states: `draft`, `open`, `closed`, `cancelled`.
+
+When creating an Invoice, it will have the `open` state by default.
+
+If you want to create an invoice with a different initial state, use one of the following
+methods on the `CreateInvoice` class:
+
+- `asDraft()`
+- `asClosed()`
+- `asCancelled()`
+
+```php
+$request = CreateInvoice::inSeries('1061104148')->asDraft();
+//...
+Factureaza::sandbox()->createInvoice($request);
+```
+
+or:
+
+```php
+$request = CreateInvoice::inSeries('1061104148')->asClosed();
+//...
+Factureaza::sandbox()->createInvoice($request);
+```
+
 ### Retrieve Invoice PDF
 
 The PDF of an Invoice can be retrieved in base64 encoded format:
