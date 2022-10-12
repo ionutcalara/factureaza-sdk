@@ -93,6 +93,19 @@ $invoice = Factureaza::sandbox()->createInvoice($request);
 //   }
 ```
 
+### Retrieve Invoice PDF
+
+The PDF of an Invoice can be retrieved in base64 encoded format:
+
+```php
+$invoiceId = '1234567';
+$pdf = Factureaza::connect('your-api-key')->invoiceAsPdfBase64($invoiceId);
+
+// Mind decoding it when you want to save it:
+
+file_put_contents('invoice.pdf', base64_decode($pdf));
+```
+
 ### Find Clients
 
 You can retrieve a client either by its Factureaza ID, or by tax number (cod fiscal).

@@ -17,6 +17,7 @@ namespace Konekt\Factureaza\Endpoints;
 use Konekt\Factureaza\Models\Invoice;
 use Konekt\Factureaza\Models\InvoiceItem;
 use Konekt\Factureaza\Requests\CreateInvoice;
+use Konekt\Factureaza\Requests\GetInvoiceAsPdf;
 
 trait Invoices
 {
@@ -32,5 +33,11 @@ trait Invoices
         $data = $response->json('data')['createInvoice'] ?? null;
 
         return is_null($data) ? null : new Invoice(array_merge($this->remap($data, Invoice::class), ['items' => $items]));
+    }
+
+    public function invoiceAsPdfBase64(string $invoiceId): ?string
+    {
+        return $this->query(new GetInvoiceAsPdf($invoiceId))
+            ->json('data')['invoices'][0]['pdfContent'] ?? null;
     }
 }

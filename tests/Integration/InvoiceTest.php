@@ -56,4 +56,13 @@ class InvoiceTest extends TestCase
         $this->assertEquals('', $item->productCode);
         $this->assertEquals(1, $item->quantity);
     }
+
+
+    /** @test */
+    public function it_can_retrieve_invoices_as_pdf_in_base64_format()
+    {
+        $pdf = Factureaza::sandbox()->invoiceAsPdfBase64('1065254039');
+        $this->assertIsString($pdf);
+        $this->assertStringStartsWith('%PDF', base64_decode($pdf));
+    }
 }
