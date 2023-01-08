@@ -20,6 +20,7 @@ use Konekt\Factureaza\Models\Client;
 use Konekt\Factureaza\Requests\CreateClient;
 use Konekt\Factureaza\Requests\GetClient;
 use Konekt\Factureaza\Requests\GetClientByEmail;
+use Konekt\Factureaza\Requests\GetClientByName;
 use Konekt\Factureaza\Requests\GetClientByTaxNo;
 
 trait Clients
@@ -50,7 +51,7 @@ trait Clients
 
     public function clientByName(string $name): ?Client
     {
-        $response = $this->query(new GetClientByEmail($name));
+        $response = $this->query(new GetClientByName($name));
         $data = $response->json('data')['clients'][0] ?? null;
 
         return is_null($data) ? null : new Client($this->remap($data, Client::class));
