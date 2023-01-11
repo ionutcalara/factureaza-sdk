@@ -29,6 +29,8 @@ class CreateInvoice implements Mutation
 
     public string $exchangeRate = '1.0000';
 
+    public string $dueDays = '30';
+
     public string $clientId;
 
     public string $documentSeriesId;
@@ -70,6 +72,7 @@ class CreateInvoice implements Mutation
         return [
             'currency' => $this->currency,
             'exchangeRate' => $this->exchangeRate,
+            'dueDays' => $this->dueDays,
             'clientId' => $this->clientId,
             'documentSeriesId' => $this->documentSeriesId,
             'documentDate' => $this->documentDate->format('Y-m-d'),
