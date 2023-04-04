@@ -44,6 +44,9 @@ class Invoice implements Resource
     /** @var InvoiceItem[] */
     public readonly array $items;
 
+	/** @var Payment[] */
+	public readonly array $payments;
+
     public static function attributeMap(): array
     {
         return [

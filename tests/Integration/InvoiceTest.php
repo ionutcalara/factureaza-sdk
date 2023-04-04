@@ -17,7 +17,9 @@ namespace Konekt\Factureaza\Tests\Integration;
 use Konekt\Factureaza\Factureaza;
 use Konekt\Factureaza\Models\Invoice;
 use Konekt\Factureaza\Models\InvoiceItem;
+use Konekt\Factureaza\Models\PaymentType;
 use Konekt\Factureaza\Requests\CreateInvoice;
+use Konekt\Factureaza\Requests\CreatePayment;
 use PHPUnit\Framework\TestCase;
 
 class InvoiceTest extends TestCase
@@ -55,6 +57,15 @@ class InvoiceTest extends TestCase
         $this->assertEquals('luna', $item->unit);
         $this->assertEquals('', $item->productCode);
         $this->assertEquals(1, $item->quantity);
+
+		$request = CreatePayment::forInvoice($invoice->id)
+			->withPaymentDate('2021-09-17')
+			->withAmount('19')
+			->withPaymentType(PaymentType::CARD());
+
+		$payment = $api->createPayment($request);
+
+		$this->assertEquals('19', $payment->amount);
     }
 
     /** @test */

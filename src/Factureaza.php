@@ -33,6 +33,7 @@ final class Factureaza
     use Endpoints\Account;
     use Endpoints\Invoices;
     use Endpoints\Clients;
+    use Endpoints\Payments;
 
     private const SANDBOX_URL = 'https://sandbox.factureaza.ro/graphql';
     private const SANDBOX_KEY = '72543f4dc00474bc40a27916d172eb93339fae894ec7a6f2dceb4751d965';
