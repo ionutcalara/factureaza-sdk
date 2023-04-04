@@ -25,6 +25,7 @@ use Konekt\Factureaza\Requests\GetClientByEmail;
 use Konekt\Factureaza\Requests\GetClientByName;
 use Konekt\Factureaza\Requests\GetClientByTaxNo;
 use Konekt\Factureaza\Requests\GetPayment;
+use Konekt\Factureaza\Requests\GetPaymentByInvoiceID;
 
 trait Payments
 {
@@ -32,6 +33,14 @@ trait Payments
 	{
 		$response = $this->query(new GetPayment($id));
 		$data = $response->json('data')['payments'][0] ?? null;
+
+		return is_null($data) ? null : new Payment($this->remap($data, Payment::class));
+	}
+
+	public function paymentByInvoiceId(string $invoiceId): ?Payment
+	{
+		$response = $this->query(new GetPaymentByInvoiceID($invoiceId));
+		$data = $response->json('data')['clients'][0] ?? null;
 
 		return is_null($data) ? null : new Payment($this->remap($data, Payment::class));
 	}
