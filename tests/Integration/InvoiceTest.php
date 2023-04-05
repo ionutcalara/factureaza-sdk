@@ -20,6 +20,7 @@ use Konekt\Factureaza\Models\InvoiceItem;
 use Konekt\Factureaza\Models\PaymentType;
 use Konekt\Factureaza\Requests\CreateInvoice;
 use Konekt\Factureaza\Requests\CreatePayment;
+use Konekt\Factureaza\Requests\UpdateInvoice;
 use PHPUnit\Framework\TestCase;
 
 class InvoiceTest extends TestCase
@@ -29,16 +30,9 @@ class InvoiceTest extends TestCase
     {
         $api = Factureaza::sandbox();
 
-        $request = CreateInvoice::inSeries('1061104148')
-            ->forClient('1064116434')
-            ->withEmissionDate('2021-09-17')
-            ->withUpperAnnotation('Hello I am on the top')
-            ->withLowerAnnotation('Hello I smell the bottom')
-            ->addItem(['description' => 'Service', 'price' => 19, 'unit' => 'luna', 'productCode' => '']);
+	    $invoice = $this->createInvoice($api);
 
-        $invoice = $api->createInvoice($request);
-
-        $this->assertInstanceOf(Invoice::class, $invoice);
+	    $this->assertInstanceOf(Invoice::class, $invoice);
         $this->assertEquals('2021-09-17', $invoice->documentDate->format('Y-m-d'));
         $this->assertEquals('1064116434', $invoice->clientId);
         $this->assertEquals(19, $invoice->total);
@@ -67,6 +61,27 @@ class InvoiceTest extends TestCase
 
 		$this->assertEquals('19', $payment->amount);
     }
+
+	/** @test */
+	public function it_can_update_an_invoice_in_the_sandbox_environment()
+	{
+		$api = Factureaza::sandbox();
+
+		 $invoice = $this->createInvoice($api);
+
+		 $updateInvoice = UpdateInvoice::fromArray([
+			 'id' => $invoice->id,
+			 'clientState'=> 'B',
+		 ])->itemsFromOriginal($invoice);
+
+
+
+		 $invoice = $api->updateInvoice($updateInvoice);
+
+		$this->assertInstanceOf(Invoice::class, $invoice);
+		$this->assertEquals('B', $invoice->clientState);
+		$this->assertEquals('1064116434', $invoice->clientId);
+	}
 
     /** @test */
     public function it_can_retrieve_invoices_as_pdf_in_base64_format()
@@ -132,4 +147,16 @@ class InvoiceTest extends TestCase
 
         $this->assertTrue($invoice->state->isDraft(), 'The invoice should be a draft when explicitly requested');
     }
+
+	private function createInvoice(Factureaza $api): Invoice
+	{
+		$request = CreateInvoice::inSeries('1061104148')
+			->forClient('1064116434')
+			->withEmissionDate('2021-09-17')
+			->withUpperAnnotation('Hello I am on the top')
+			->withLowerAnnotation('Hello I smell the bottom')
+			->addItem(['description' => 'Service', 'price' => 19, 'unit' => 'luna', 'productCode' => '']);
+
+		return $api->createInvoice($request);
+	}
 }

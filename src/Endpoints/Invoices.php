@@ -20,6 +20,7 @@ use Konekt\Factureaza\Models\Payment;
 use Konekt\Factureaza\Requests\CreateInvoice;
 use Konekt\Factureaza\Requests\GetInvoice;
 use Konekt\Factureaza\Requests\GetInvoiceAsPdf;
+use Konekt\Factureaza\Requests\UpdateInvoice;
 
 trait Invoices
 {
@@ -28,6 +29,13 @@ trait Invoices
 		$response = $this->mutate($invoice);
 
 		return $this->rawApiDataToInvoice($response->json('data')['createInvoice'] ?? null);
+	}
+
+	public function updateInvoice(UpdateInvoice $invoice): ?Invoice
+	{
+		$response = $this->mutate($invoice);
+
+		return $this->rawApiDataToInvoice($response->json('data')['updateInvoice'] ?? null);
 	}
 
 	public function invoiceAsPdfBase64(string $invoiceId): ?string
