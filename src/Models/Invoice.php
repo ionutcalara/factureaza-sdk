@@ -27,19 +27,19 @@ class Invoice implements Resource
 
     public readonly DocumentState $state;
 
-    public readonly string $clientId;
+    public readonly ?string $clientId;
 
-	public readonly string $clientName;
+	public readonly ?string $clientName;
 
-	public readonly string $clientAddress;
+	public readonly ?string $clientAddress;
 
-	public readonly string $clientAddress2;
+	public readonly ?string $clientAddress2;
 
-	public readonly string $clientCity;
+	public readonly ?string $clientCity;
 
-	public readonly string $clientState;
+	public readonly ?string $clientState;
 
-	public readonly string $clientZip;
+	public readonly ?string $clientZip;
 
     public readonly string $number;
 
