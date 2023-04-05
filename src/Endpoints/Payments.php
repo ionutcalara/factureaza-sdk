@@ -32,7 +32,7 @@ trait Payments
 	public function paymentByInvoiceId(string $invoiceId): ?Payment
 	{
 		$response = $this->query(new GetPaymentByInvoiceID($invoiceId));
-		$data = $response->json('data')['clients'][0] ?? null;
+		$data = $response->json('data')['payments'][0] ?? null;
 
 		return is_null($data) ? null : new Payment($this->remap($data, Payment::class));
 	}
