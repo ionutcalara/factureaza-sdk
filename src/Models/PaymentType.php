@@ -22,7 +22,7 @@ class PaymentType extends Enum
 {
     public const __DEFAULT = self::CARD;
 
-    public const CARD = 'Card';
-    public const BANK_TRANSFER = 'Ordin de plată / transfer bancar';
-    public const POST_MANDATE = 'Mandat poștal';
+    public const CARD = 'credit_card';
+    public const BANK_TRANSFER = 'bank_transfer';
+    public const POST_MANDATE = 'postal_order';
 }
