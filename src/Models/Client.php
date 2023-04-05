@@ -22,31 +22,31 @@ class Client implements Resource
     use HasId;
     use HasTimestamps;
 
-    public readonly string $name;
+    public string $name;
 
-    public readonly bool $isCompany;
+    public bool $isCompany;
 
-    public readonly string $address;
+    public string $address;
 
-    public readonly ?string $address2;
+    public ?string $address2;
 
-    public readonly ?string $zip;
+    public ?string $zip;
 
-    public readonly string $city;
+    public string $city;
 
-    public readonly ?string $province;
+    public ?string $province;
 
-    public readonly string $country;
+    public string $country;
 
-    public readonly ?string $email;
+    public ?string $email;
 
-    public readonly ?string $phone;
+    public ?string $phone;
 
-    public readonly ?string $regNo;
+    public ?string $regNo;
 
-    public readonly ?string $taxNo;
+    public ?string $taxNo;
 
-    public readonly ?string $taxNoPrefix;
+    public ?string $taxNoPrefix;
 
     public static function attributeMap(): array
     {
