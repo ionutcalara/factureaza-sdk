@@ -68,7 +68,7 @@ class ClientTest extends TestCase
 
 		$request = UpdateClient::fromArray([
 			'id'=> $client->id,
-			'province'=> 'B'
+			'province'=> 'B',
 		]);
 
 		$client = Factureaza::sandbox()->updateClient($request);

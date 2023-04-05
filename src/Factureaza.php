@@ -131,7 +131,11 @@ final class Factureaza
                 $actualValue = call_user_func($actualKey[1], $value);
                 $actualKey = $actualKey[0];
             } elseif ($this->isABoolProperty($actualKey, $forClass)) {
-                $actualValue = 'true' === strtolower($value);
+				if(is_bool($value)){
+					$actualValue = $value;
+				}else {
+					$actualValue = 'true' === strtolower($value);
+				}
             } elseif ($this->isADateTimeProperty($actualKey, $forClass)) {
                 $actualValue = $this->makeDateTime($value);
             } elseif ($enumClass = $this->isAKonektEnum($actualKey, $forClass)) {

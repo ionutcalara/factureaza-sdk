@@ -46,6 +46,8 @@ class UpdateInvoice implements Mutation
     public ?string $clientState = null;
     public ?string $clientZip = null;
 
+	public ?bool $clientIsCompany = null;
+
     public ?string $documentSeriesId = null;
 
     public ?string $upperAnnotation = null;
@@ -104,6 +106,7 @@ class UpdateInvoice implements Mutation
 	        'clientAddress' => $this->clientAddress,
 	        'clientAddress2' => $this->clientAddress2,
 	        'clientCity' => $this->clientCity,
+	        'clientIsCompany' => $this->clientIsCompany,
 	        'clientState' => $this->clientState,
 	        'clientZip' => $this->clientZip,
             'upperAnnotation' => $this->upperAnnotation,

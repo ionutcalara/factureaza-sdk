@@ -28,6 +28,7 @@ trait RequestsInvoiceFields
         'clientCity',
 	    'clientState',
 	    'clientZip',
+	    'clientIsCompany',
         'currency',
         'total',
         'hashcode',

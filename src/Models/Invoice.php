@@ -40,6 +40,7 @@ class Invoice implements Resource
 	public readonly ?string $clientState;
 
 	public readonly ?string $clientZip;
+	public readonly ?bool $clientIsCompany;
 
     public readonly string $number;
 

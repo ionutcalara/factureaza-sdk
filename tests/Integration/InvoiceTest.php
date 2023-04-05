@@ -72,6 +72,7 @@ class InvoiceTest extends TestCase
 		 $updateInvoice = UpdateInvoice::fromArray([
 			 'id' => $invoice->id,
 			 'clientState'=> 'B',
+			 'clientIsCompany' => true
 		 ])->itemsFromOriginal($invoice);
 
 
@@ -80,6 +81,7 @@ class InvoiceTest extends TestCase
 
 		$this->assertInstanceOf(Invoice::class, $invoice);
 		$this->assertEquals('B', $invoice->clientState);
+		$this->assertEquals( true, $invoice->clientIsCompany);
 		$this->assertEquals('1064116434', $invoice->clientId);
 	}
 
