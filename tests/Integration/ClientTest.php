@@ -17,6 +17,7 @@ namespace Konekt\Factureaza\Tests\Integration;
 use Konekt\Factureaza\Exceptions\ClientExistsException;
 use Konekt\Factureaza\Factureaza;
 use Konekt\Factureaza\Models\Client;
+use Konekt\Factureaza\Requests\UpdateClient;
 use PHPUnit\Framework\TestCase;
 
 class ClientTest extends TestCase
@@ -59,6 +60,23 @@ class ClientTest extends TestCase
         $this->assertEquals('1064116434', $client->id);
         $this->assertEquals('13548146', $client->taxNo);
     }
+
+	/** @test */
+	public function it_can_update_a_client_by_tax_number()
+	{
+		$client = Factureaza::sandbox()->clientByTaxNo('13548146');
+
+		$request = UpdateClient::fromArray([
+			'id'=> $client->id,
+			'province'=> 'Bacau'
+		]);
+
+		$client = Factureaza::sandbox()->updateClient($request);
+
+		$this->assertInstanceOf(Client::class, $client);
+		$this->assertEquals('1064116434', $client->id);
+		$this->assertEquals('Bacau', $client->province);
+	}
 
     /** @test */
     public function it_can_create_a_client_with_minimal_data()

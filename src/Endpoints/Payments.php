@@ -14,16 +14,8 @@ declare(strict_types=1);
 
 namespace Konekt\Factureaza\Endpoints;
 
-use Konekt\Factureaza\Exceptions\ClientExistsException;
-use Konekt\Factureaza\Exceptions\FactureazaException;
-use Konekt\Factureaza\Models\Client;
 use Konekt\Factureaza\Models\Payment;
-use Konekt\Factureaza\Requests\CreateClient;
 use Konekt\Factureaza\Requests\CreatePayment;
-use Konekt\Factureaza\Requests\GetClient;
-use Konekt\Factureaza\Requests\GetClientByEmail;
-use Konekt\Factureaza\Requests\GetClientByName;
-use Konekt\Factureaza\Requests\GetClientByTaxNo;
 use Konekt\Factureaza\Requests\GetPayment;
 use Konekt\Factureaza\Requests\GetPaymentByInvoiceID;
 
