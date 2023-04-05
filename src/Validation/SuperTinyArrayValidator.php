@@ -68,7 +68,7 @@ class SuperTinyArrayValidator
             return $value->__toString();
         }
 
-        return ValidationResult::FAILED();
+		return (string) $value;
     }
 
     private function asOptionalString(mixed $value, string $default = null): string|null|ValidationResult
@@ -88,6 +88,15 @@ class SuperTinyArrayValidator
 
         return $this->asBool($value);
     }
+
+	private function asOptionalFloat(mixed $value, float $default = null): float|null|ValidationResult
+	{
+		if (null === $value) {
+			return $default;
+		}
+
+		return $this->asNumber($value);
+	}
 
     private function asBool(mixed $value): bool|ValidationResult
     {

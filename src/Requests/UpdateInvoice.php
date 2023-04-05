@@ -109,6 +109,7 @@ class UpdateInvoice implements Mutation
             'upperAnnotation' => $this->upperAnnotation,
             'lowerAnnotation' => $this->lowerAnnotation,
             'documentPositions' => collect($this->items)->map->toPayload()->toArray(),
+	        'documentPositionsUpdatePolicy' => 'replace',
         ];
 
 	    return array_filter($payload, fn($v) => !is_null($v));

@@ -29,6 +29,7 @@ class InvoiceItem implements Resource
     public readonly string $unit;
 
     public readonly float $quantity;
+    public readonly float $vat;
 
     public readonly ?string $productCode;
 

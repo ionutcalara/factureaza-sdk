@@ -29,7 +29,7 @@ class CreateInvoiceItem
 
     private ?string $productCode = null;
 
-    private ?string $vat = null;
+    private ?string $vat = '19';
 
     private static array $schema = [
         'description' => 'string*',
@@ -65,7 +65,7 @@ class CreateInvoiceItem
             'unitCount' => number_format($this->quantity, 2, '.', ''),
             'price' => number_format($this->price, 2, '.', ''),
             'productCode' => $this->productCode,
-            'vat' => $this->vat,
+            'vat' => $this->vat ?? null,
         ];
     }
 

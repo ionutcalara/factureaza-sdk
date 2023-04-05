@@ -68,14 +68,14 @@ class ClientTest extends TestCase
 
 		$request = UpdateClient::fromArray([
 			'id'=> $client->id,
-			'province'=> 'Bacau'
+			'province'=> 'B'
 		]);
 
 		$client = Factureaza::sandbox()->updateClient($request);
 
 		$this->assertInstanceOf(Client::class, $client);
 		$this->assertEquals('1064116434', $client->id);
-		$this->assertEquals('Bacau', $client->province);
+		$this->assertEquals('B', $client->province);
 	}
 
     /** @test */
