@@ -108,7 +108,7 @@ final class Factureaza
 
     protected function mutate(Mutation $mutation): Response
     {
-        return $this->request(
+         return $this->request(
             GraphQLOperation::MUTATION(),
             $mutation->operation(),
             $mutation->fields(),

@@ -60,6 +60,8 @@ class Invoice implements Resource
 	/** @var Payment[] */
 	public readonly array $payments;
 
+	public readonly string $xml;
+
     public static function attributeMap(): array
     {
         return [

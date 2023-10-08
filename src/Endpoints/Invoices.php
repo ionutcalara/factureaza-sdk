@@ -18,6 +18,7 @@ use Konekt\Factureaza\Models\Invoice;
 use Konekt\Factureaza\Models\InvoiceItem;
 use Konekt\Factureaza\Models\Payment;
 use Konekt\Factureaza\Requests\CreateInvoice;
+use Konekt\Factureaza\Requests\ExportInvoiceAsEFactura;
 use Konekt\Factureaza\Requests\GetInvoice;
 use Konekt\Factureaza\Requests\GetInvoiceAsPdf;
 use Konekt\Factureaza\Requests\UpdateInvoice;
@@ -42,6 +43,13 @@ trait Invoices
 	{
 		return $this->query(new GetInvoiceAsPdf($invoiceId))
 			->json('data')['invoices'][0]['pdfContent'] ?? null;
+	}
+
+	public function invoiceAsEFactura(ExportInvoiceAsEFactura $exportInvoiceAsEFactura): ?string
+	{
+		$response = $this->mutate($exportInvoiceAsEFactura);
+
+		return $response->json('data')['exportInvoiceEfacturaUbl']['xml'] ?? null;
 	}
 
 	public function invoice(string $invoiceId): ?Invoice
