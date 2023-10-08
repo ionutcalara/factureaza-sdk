@@ -21,6 +21,7 @@ use Konekt\Factureaza\Models\PaymentType;
 use Konekt\Factureaza\Requests\CreateInvoice;
 use Konekt\Factureaza\Requests\CreatePayment;
 use Konekt\Factureaza\Requests\ExportInvoiceAsEFactura;
+use Konekt\Factureaza\Requests\SubmitInvoiceToAnafAsEFactura;
 use Konekt\Factureaza\Requests\UpdateInvoice;
 use PHPUnit\Framework\TestCase;
 
@@ -178,6 +179,30 @@ class InvoiceTest extends TestCase
 
 		$this->assertNotEmpty($xml, 'The invoice efacturaXml should be populated');
 		$this->assertStringContainsString('<cbc:PaymentMeansCode>55</cbc:PaymentMeansCode>', $xml);
+	}
+
+	/** @test */
+	public function a_invoice_can_be_sent_to_anaf_as_einvoice()
+	{
+		$api = Factureaza::sandbox();
+
+		$request = CreateInvoice::inSeries(self::INVOICE_SERIES)
+			->forClient(self::CLIENT_ID)
+			->withEmissionDate(self::INVOICE_DATE)
+			->asClosed()
+			->addItem(['description' => 'Service', 'price' => 19, 'unit' => 'luna', 'productCode' => '']);
+		$invoice = $api->createInvoice($request);
+
+		$exportInvoiceAsEFactura = SubmitInvoiceToAnafAsEFactura::forInvoice($invoice->id)
+			->addDocumentPositionUnitsAttribute([
+				'documentPositionUnits'=> 'luna',
+				'documentPositionDescriptions'=> 'M36'
+			])
+			->withPaymentMethodDebitCard();
+
+		$status = $api->submitInvoiceToAnafAsEFactura($exportInvoiceAsEFactura);
+
+		$this->assertNull($status, 'The service should not throw errors, testing the endpoint doesnt work in sandbox');
 	}
 
 	private function createInvoice(Factureaza $api): Invoice

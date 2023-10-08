@@ -6,19 +6,19 @@ namespace Konekt\Factureaza\Requests;
 
 use Konekt\Factureaza\Contracts\Mutation;
 
-class ExportInvoiceAsEFactura extends InvoiceAsEFactura implements Mutation
+class SubmitInvoiceToAnafAsEFactura extends InvoiceAsEFactura implements Mutation
 {
 
 	public function fields(): array
 	{
 		return [
-			'xml'
+			'efacturaTransaction'
 		];
 	}
 
 	public function operation(): string
 	{
-		return 'exportInvoiceEfacturaUbl';
+		return 'submitInvoiceEfacturaUbl';
 	}
 
 }
