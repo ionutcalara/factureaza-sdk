@@ -27,11 +27,11 @@ use PHPUnit\Framework\TestCase;
 
 class InvoiceTest extends TestCase
 {
-	public const INVOICE_SERIES = '1061104288';
+	public const INVOICE_SERIES = '1061104519';
 
 	public const CLIENT_ID = '1064116434';
 
-	public const INVOICE_DATE = '2023-09-17';
+	public const INVOICE_DATE = '2024-03-21';
 
 	/** @test */
 	public function it_can_create_an_invoice_in_the_sandbox_environment()
@@ -41,8 +41,8 @@ class InvoiceTest extends TestCase
 		$invoice = $this->createInvoice($api);
 
 		$this->assertInstanceOf(Invoice::class, $invoice);
-		$this->assertEquals('2023-09-17', $invoice->documentDate->format('Y-m-d'));
-		$this->assertEquals('1064116434', $invoice->clientId);
+		$this->assertEquals(self::INVOICE_DATE, $invoice->documentDate->format('Y-m-d'));
+		$this->assertEquals(self::CLIENT_ID, $invoice->clientId);
 		$this->assertEquals(19, $invoice->total);
 		$this->assertEquals('RON', $invoice->currency);
 		$this->assertIsString($invoice->number);
@@ -113,8 +113,8 @@ class InvoiceTest extends TestCase
 		$invoice = Factureaza::sandbox()->invoice($invoice->id);
 
 		$this->assertInstanceOf(Invoice::class, $invoice);
-		$this->assertEquals('2023-09-17', $invoice->documentDate->format('Y-m-d'));
-		$this->assertEquals('1064116434', $invoice->clientId);
+		$this->assertEquals(self::INVOICE_DATE, $invoice->documentDate->format('Y-m-d'));
+		$this->assertEquals(self::CLIENT_ID, $invoice->clientId);
 		$this->assertEquals(19, $invoice->total);
 		$this->assertEquals('RON', $invoice->currency);
 		$this->assertEquals('Hello I am on the top', $invoice->upperAnnotation);
@@ -205,6 +205,64 @@ class InvoiceTest extends TestCase
 		$this->assertNull($status, 'The service should not throw errors, testing the endpoint doesnt work in sandbox');
 	}
 
+    /** @test */
+    public function can_get_a_list_of_invoices_for_client()
+    {
+        $api = Factureaza::sandbox();
+
+        $request = CreateInvoice::inSeries(self::INVOICE_SERIES)
+            ->forClient(self::CLIENT_ID)
+            ->withEmissionDate(self::INVOICE_DATE)
+            ->asClosed()
+            ->addItem(['description' => 'Service', 'price' => 19, 'unit' => 'luna', 'productCode' => '']);
+        $invoice1 = $api->createInvoice($request);
+
+        sleep(1); // To make sure the dates are different (we don't have milliseconds in the date format
+
+        $request2 = CreateInvoice::inSeries(self::INVOICE_SERIES)
+            ->forClient(self::CLIENT_ID)
+            ->withEmissionDate(self::INVOICE_DATE)
+            ->asClosed()
+            ->addItem(['description' => 'Service 2', 'price' => 20, 'unit' => 'luna', 'productCode' => '']);
+        $invoice2 = $api->createInvoice($request2);
+
+
+        $invoices = Factureaza::sandbox()->invoicesByClientId(self::CLIENT_ID);
+        $invoice = $invoices[0];
+
+        $this->assertInstanceOf(Invoice::class, $invoice);
+        $this->assertEquals(self::INVOICE_DATE, $invoice->documentDate->format('Y-m-d'));
+        $this->assertEquals(self::CLIENT_ID, $invoice->clientId);
+        $this->assertEquals($invoice2->number, $invoice->number);
+        $this->assertEquals(20, $invoice->total);
+
+        $this->assertCount(1, $invoice->items);
+
+        $item = $invoice->items[0];
+        $this->assertInstanceOf(InvoiceItem::class, $item);
+        $this->assertEquals('Service 2', $item->description);
+        $this->assertEquals(20, $item->price);
+        $this->assertEquals('luna', $item->unit);
+        $this->assertEquals(1, $item->quantity);
+
+
+        $invoice = $invoices[1];
+        $this->assertInstanceOf(Invoice::class, $invoice);
+        $this->assertEquals(self::INVOICE_DATE, $invoice->documentDate->format('Y-m-d'));
+        $this->assertEquals(self::CLIENT_ID, $invoice->clientId);
+        $this->assertEquals(19, $invoice->total);
+        $this->assertEquals($invoice1->number, $invoice->number);
+
+        $this->assertCount(1, $invoice->items);
+
+        $item = $invoice->items[0];
+        $this->assertInstanceOf(InvoiceItem::class, $item);
+        $this->assertEquals('Service', $item->description);
+        $this->assertEquals(19, $item->price);
+        $this->assertEquals('luna', $item->unit);
+        $this->assertEquals(1, $item->quantity);
+    }
+
 	private function createInvoice(Factureaza $api): Invoice
 	{
 		$request = CreateInvoice::inSeries(self::INVOICE_SERIES)
@@ -216,4 +274,6 @@ class InvoiceTest extends TestCase
 
 		return $api->createInvoice($request);
 	}
+
+
 }
