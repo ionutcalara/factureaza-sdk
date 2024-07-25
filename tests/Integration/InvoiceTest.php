@@ -27,11 +27,11 @@ use PHPUnit\Framework\TestCase;
 
 class InvoiceTest extends TestCase
 {
-	public const INVOICE_SERIES = '1061104519';
+	public const INVOICE_SERIES = '1061104610';
 
-	public const CLIENT_ID = '1064116434';
+	public const CLIENT_ID = '1064116438';
 
-	public const INVOICE_DATE = '2024-03-21';
+	public const INVOICE_DATE = '2024-04-26';
 
 	/** @test */
 	public function it_can_create_an_invoice_in_the_sandbox_environment()
@@ -266,10 +266,11 @@ class InvoiceTest extends TestCase
 	private function createInvoice(Factureaza $api): Invoice
 	{
 		$request = CreateInvoice::inSeries(self::INVOICE_SERIES)
-			->forClient('1064116434')
+			->forClient(self::CLIENT_ID)
 			->withEmissionDate(self::INVOICE_DATE)
 			->withUpperAnnotation('Hello I am on the top')
 			->withLowerAnnotation('Hello I smell the bottom')
+//            ->withCompanyReferenceCodeSource('company_vat_id')
 			->addItem(['description' => 'Service', 'price' => 19, 'unit' => 'luna', 'productCode' => '']);
 
 		return $api->createInvoice($request);

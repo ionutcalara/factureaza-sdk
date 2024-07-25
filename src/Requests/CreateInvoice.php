@@ -37,6 +37,7 @@ class CreateInvoice implements Mutation
 
     public string $documentSeriesId;
 
+    public ?string $companyReferenceCodeSource = null;
     public ?string $upperAnnotation = null;
 
     public ?string $lowerAnnotation = null;
@@ -81,6 +82,7 @@ class CreateInvoice implements Mutation
             'documentDate' => $this->documentDate->format('Y-m-d'),
             'documentState' => $this->state->value(),
             'upperAnnotation' => $this->upperAnnotation,
+            'companyReferenceCodeSource' => $this->companyReferenceCodeSource ?? null,
             'lowerAnnotation' => $this->lowerAnnotation,
             'documentPositions' => collect($this->items)->map->toPayload()->toArray(),
         ];
@@ -116,6 +118,13 @@ class CreateInvoice implements Mutation
     public function withUpperAnnotation(string $text): self
     {
         $this->upperAnnotation = $text;
+
+        return $this;
+    }
+
+    public function withCompanyReferenceCodeSource(string $companyReferenceCodeSource): self
+    {
+        $this->companyReferenceCodeSource = $companyReferenceCodeSource;
 
         return $this;
     }

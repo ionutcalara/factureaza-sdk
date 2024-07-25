@@ -27,6 +27,7 @@ class Invoice implements Resource
 
     public readonly DocumentState $state;
 
+    public readonly ?string $companyReferenceCodeSource;
     public readonly ?string $clientId;
 
 	public readonly ?string $clientName;
